@@ -4,5 +4,6 @@
   "version": "0.0.1",
   "description": "Quantified Self style website for Tom Rudick. Hosted at http://www.tomrudick.com.",
   "dependencies": {
+    "request": "~2.21.0"
   }
 }
