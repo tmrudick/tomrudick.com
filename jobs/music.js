@@ -60,7 +60,8 @@ job('music_monthly', '1 day', function(done, existing_data) {
         if (Object.keys(obj).length < 5) {
             console.log(Object.keys(obj).length);
             _getSongsForDate(date, function(ids) {
-                obj[date.valueOf()] = ids.length;
+                // Need to get epoch seconds
+                obj[Math.floor(date.valueOf()/1000)] = ids.length;
 
                 date.subtract('days', 1);
                 callback(date);
@@ -95,7 +96,7 @@ function _toArray(obj) {
     for (var idx = 0; idx < keys.length; idx++) {
         var key = keys[idx];
 
-        array.push([key, obj[key]]);
+        array.push([+key, obj[key]]);
     }
 
     return array;
