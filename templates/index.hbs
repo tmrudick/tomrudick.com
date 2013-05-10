@@ -20,5 +20,19 @@
             <p>Most people tell me that I am working on too many side projects but I'm just trying to have work/work balance. I've been most recently working on {{{link projects.most_recent.name projects.most_recent.url}}}.</p>
             <p>Last year, I <a href="http://rudickulous.com/post/38727951707/how-to-paint-a-mural">painted a mural</a> in Seattle with a whole bunch of strangers. It was probably one of the better projects that I've started.</p>
         </div>
+
+        <div class="section" id="music">
+            <p>I really like music. I've already listened to {{music.today.total}} songs today.</p>
+            <div class="iblock">
+                <ul>
+                    {{#each music.today.songs}}
+                    <li class="song"><img src="{{this.image}}"></li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="iblock">
+                <div id="music-graph"></div>
+            </div>
+        </div>
     </body>
 </html>

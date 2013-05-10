@@ -2,5 +2,6 @@ npm-debug.log
 node_modules/
 
 config.json
+data.json
 
 public/*.html

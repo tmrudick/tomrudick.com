@@ -22,7 +22,6 @@ job('projects', '1 day', function(done) {
         // Loop over them and take the first PushEvent
         response.body.forEach(function(event) {
             if (event.type === 'PushEvent') {
-                console.log(event);
                 return done({
                     most_recent: project_from_event(event)
                 });
