@@ -39,6 +39,15 @@
                 </ul>
             </div>
         </div>
+
+        <div class="section" id="locations">
+            <p>This week, I've checked into {{checkins.total}} places. Most of them have been {{checkins.type}}</p>
+            <div id="map"></div>
+        </div>
+
+        <div class="section" id="contact">
+                <p>Feel free to contact me via <a href="mailto:tom@tomrudick.com">email</a>, <a href="http://twitter.com/tmrudick">twitter</a>, <a href="http://facebook.com/tmrudick">facebook</a>, <a href="open.spotify.com/user/tmrudick">spotify</a>, or <a href="http://www.linkedin.com/in/tomrudick">linkedin</a>.</p>
+        </div>
         <script>
             var data = {{json music_monthly}};
 
