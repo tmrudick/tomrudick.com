@@ -32,6 +32,14 @@ p {
 }
 
 .song img {
-    height: 150px;
-    width: 150px;
+    margin-right: 5px;
+    height: 148px;
+    width: 148px;
+}
+#albums .song:last-child img {
+    margin-right: 0;
+}
+
+#albums {
+    margin-top: 10px;
 }
