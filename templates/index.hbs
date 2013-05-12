@@ -31,9 +31,9 @@
             <div id="music-chart">
 
             </div>
-            <div class="iblock">
-                <ul>
-                    {{#each music.today.songs}}
+            <div>
+                <ul class='horizontal-list'>
+                    {{#each album_covers}}
                     <li class="song"><a href="{{this.url}}"><img src="{{this.image}}"></a></li>
                     {{/each}}
                 </ul>
@@ -50,6 +50,11 @@
                         y: data[i][1]
                     })
                 }
+
+                series_data.push({
+                    x: {{ music.today.timestamp}},
+                    y: {{ music.today.total }}
+                })
 
                 var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
                 var graph = new Rickshaw.Graph( {

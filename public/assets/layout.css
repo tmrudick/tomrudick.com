@@ -25,3 +25,13 @@ p {
 .section {
     margin-top: 25px;
 }
+
+.horizontal-list li {
+    display: inline-block;
+    text-align: top;
+}
+
+.song img {
+    height: 150px;
+    width: 150px;
+}
