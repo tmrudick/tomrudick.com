@@ -76,23 +76,20 @@
                     preserve: true,
                     series: [
                         {
-                            color: palette.color(),
+                            color: '#81ad00',
                             data: series_data,
-                            name: 'Music'
+                            name: 'Listens'
                         }
                     ]
                 });
 
                 graph.render();
 
-                var ticksTreatment = 'glow';
-                var xAxis = new Rickshaw.Graph.Axis.Time( {
-                    graph: graph,
-                    ticksTreatment: ticksTreatment
+                var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+                    graph: graph
                 });
 
-                xAxis.render();
-
+                var ticksTreatment = 'glow';
                 var yAxis = new Rickshaw.Graph.Axis.Y( {
                     graph: graph,
                     tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
