@@ -8,6 +8,7 @@
         <script src="assets/js/d3.min.js"></script>
         <script src="assets/js/d3.layout.min.js"></script>
         <script src="assets/js/rickshaw.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkpZmSbzKSiiBQ4cF3LJNoMlVSZvFcNp8&sensor=false"></script>
     </head>
     <body>
         <div id="header">
@@ -41,12 +42,12 @@
         </div>
 
         <div class="section" id="locations">
-            <p>This week, I've checked into {{checkins.total}} places. Most of them have been {{checkins.type}}</p>
+            <p>This week, I've checked into {{checkins.recent.length}} places. Most of them have been {{checkins.top_category}}.</p>
             <div id="map"></div>
         </div>
 
         <div class="section" id="contact">
-                <p>Feel free to contact me via <a href="mailto:tom@tomrudick.com">email</a>, <a href="http://twitter.com/tmrudick">twitter</a>, <a href="http://facebook.com/tmrudick">facebook</a>, <a href="open.spotify.com/user/tmrudick">spotify</a>, or <a href="http://www.linkedin.com/in/tomrudick">linkedin</a>.</p>
+                <p>Feel free to contact me via <a href="mailto:tom@tomrudick.com">email</a>, <a href="http://twitter.com/tmrudick">twitter</a>, <a href="http://facebook.com/tmrudick">facebook</a>, <a href="http://open.spotify.com/user/tmrudick">spotify</a>, or <a href="http://www.linkedin.com/in/tomrudick">linkedin</a>.</p>
         </div>
         <script>
             var data = {{json music_monthly}};
@@ -99,6 +100,47 @@
                 });
 
                 yAxis.render();
+
+                var mapOptions = {
+                    center: new google.maps.LatLng(40.7111, -73.9565),
+                    zoom: 8,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    scrollwheel: false
+                };
+                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                var infoWindow = new google.maps.InfoWindow();
+
+                    var points = [
+                    {{#each checkins.recent}}
+                    { location: new google.maps.LatLng({{this.location.lat}},{{this.location.lng}}),
+                      timestamp: '{{this.timestamp}}',
+                      name: "{{this.name}}",
+                      url: "{{this.url}}"
+                    },
+                    {{/each}}
+                ];
+
+                function createMarker(point) {
+                    var marker = new google.maps.Marker({
+                        position: point.location,
+                        map: map
+                    });
+
+                    var content = "<p><strong>" + point.timestamp + "</strong> <a href=\"" + point.url + "\">" + point.name + "</a></p>";
+
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infoWindow.setContent(content);
+                        infoWindow.open(map,marker);
+                    });
+                }
+
+                var bounds = new google.maps.LatLngBounds();
+                for (var i = 0; i < points.length; i++) {
+                    createMarker(points[i]);
+                    bounds.extend(points[i].location);
+                }
+
+                map.fitBounds(bounds);
             });
         </script>
     </body>

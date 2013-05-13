@@ -43,3 +43,7 @@ p {
 #albums {
     margin-top: 10px;
 }
+
+#map {
+    height: 300px;
+}
