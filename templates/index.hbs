@@ -29,9 +29,7 @@
 
         <div class="section" id="music">
             <p>I really like music. I've already listened to {{music.today.total}} songs today.</p>
-            <div id="music-chart">
-
-            </div>
+            <div id="music-chart"></div>
             <div id="albums">
                 <ul class='horizontal-list'>
                     {{#each album_covers}}
@@ -46,11 +44,29 @@
             <div id="map"></div>
         </div>
 
+        <div class="section" id="health">
+            <p>I usually try to walk as much as I can. Some days I'm better than others. Today, I've walked {{walking.today}} miles so far.</p>
+            <div id="walking-chart"></div>
+        </div>
+
+        <div class="section" id="eight30six">
+            <p>Inspired by <a href="http://busterbenson.com">Buster Benson</a>, I've been taking a photo of exactly what I'm doing every night at <a href="http://836.rudickuloud.com">8:36pm</a>.</p>
+            <div class="highlight cropped {{eight30six.recent.css}}"><a href="{{eight30six.recent.url}}"><img src="{{eight30six.recent.img}}"></a>
+            <p>{{eight30six.recent.caption}}</p>
+            </div>
+            <div class="grid-box">
+                {{#each eight30six.previous}}
+                <div class="cropped {{this.css}}"><a href="{{this.url}}"><img src="{{this.img}}"></a></div>
+                {{/each}}
+            </div>
+        </div>
+
         <div class="section" id="contact">
                 <p>Feel free to contact me via <a href="mailto:tom@tomrudick.com">email</a>, <a href="http://twitter.com/tmrudick">twitter</a>, <a href="http://facebook.com/tmrudick">facebook</a>, <a href="http://open.spotify.com/user/tmrudick">spotify</a>, or <a href="http://www.linkedin.com/in/tomrudick">linkedin</a>.</p>
         </div>
         <script>
             var data = {{json music_monthly}};
+            var walking_data = {{json walking.monthly}}
 
             $(function() {
                 var series_data = [];
@@ -98,6 +114,48 @@
 
                 yAxis.render();
 
+                // WALKING CHART
+                var walking_graph = new Rickshaw.Graph( {
+                    element: document.getElementById("walking-chart"),
+                    width: 780,
+                    height: 150,
+                    renderer: 'line',
+                    stroke: true,
+                    preserve: true,
+                    series: [
+                        {
+                            color: '#81ad00',
+                            data: walking_data,
+                            name: 'Miles'
+                        }
+                    ]
+                });
+
+                walking_graph.render();
+
+                new Rickshaw.Graph.HoverDetail( {
+                    graph: walking_graph
+                });
+
+                var time = new Rickshaw.Fixtures.Time();
+
+                var ticksTreatment = 'glow';
+                var xAxis = new Rickshaw.Graph.Axis.Time({
+                    graph: walking_graph,
+                    timeUnit: time.unit('day')
+                });
+
+                xAxis.render();
+
+                var walking_yAxis = new Rickshaw.Graph.Axis.Y( {
+                    graph: walking_graph,
+                    tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                    ticksTreatment: ticksTreatment
+                });
+
+                walking_yAxis.render();
+
+
                 var mapOptions = {
                     center: new google.maps.LatLng(40.7111, -73.9565),
                     zoom: 8,
@@ -123,7 +181,7 @@
                         map: map
                     });
 
-                    var content = "<p><strong>" + point.timestamp + "</strong> <a href=\"" + point.url + "\">" + point.name + "</a></p>";
+                    var content = "<p><strong>" + point.timestamp + "</strong>: <a href=\"" + point.url + "\">" + point.name + "</a></p>";
 
                     google.maps.event.addListener(marker, 'click', function() {
                         infoWindow.setContent(content);

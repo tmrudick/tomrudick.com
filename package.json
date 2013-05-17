@@ -5,6 +5,7 @@
   "description": "Quantified Self style website for Tom Rudick. Hosted at http://www.tomrudick.com.",
   "dependencies": {
     "request": "~2.21.0",
-    "moment": "~2.0.0"
+    "moment": "~2.0.0",
+    "oauth": "~0.9.10"
   }
 }

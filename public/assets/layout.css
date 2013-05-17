@@ -47,3 +47,75 @@ p {
 #map {
     height: 300px;
 }
+
+.cropped {
+    overflow: hidden;
+    display: inline-block;
+}
+
+.landscape-large {
+        background: #000;
+        vertical-align: top;
+
+    height: 281px;
+    width: 281px;
+}
+.landscape-large img {
+    margin-left: -109px;
+}
+
+.landscape-small {
+        background: #000;
+
+    height: 140px;
+    width: 140px;
+}
+
+.landscape-small img {
+    margin-top: -70px;
+    margin-left: -180px;
+}
+
+.portrait-large {
+        background: #000;
+        vertical-align: top;
+
+    height: 281px;
+    width: 281px;
+
+}
+.portrait-large img {
+    margin-top: -235px;
+    margin-left: -70px;
+}
+
+.portrait-small {
+    background: #000;
+    height: 140px;
+    width: 140px;
+}
+
+.portrait-small img {
+    margin-top: -305px;
+    margin-left: -141px;
+}
+
+.caption {
+    display: inline-block;
+}
+.grid-box {
+    width: 480px;
+    display: inline-block;
+}
+.highlight {
+    position: relative;
+}
+.highlight p {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    width: 100%;
+    line-height: 2em;
+}
