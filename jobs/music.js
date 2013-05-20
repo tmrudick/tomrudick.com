@@ -108,13 +108,11 @@ job('music_monthly', '1 day', function(done, existing_data) {
     // If we have today's data and 30 days worth of data total, we don't have anything
     // to do. No additional data can be collected. So, just return what we already got.
     if (obj[Math.floor(yesterday.valueOf()/1000)] && Object.keys(obj).length === 29) {
-        console.log("BAILING")
         return done(existing_data);
     }
 
     var callback = function(date) {
         if (Object.keys(obj).length < 30) {
-            console.log(Object.keys(obj).length);
             _getSongsForDate(date, function(ids) {
                 // Need to get epoch seconds
                 obj[Math.floor(date.valueOf()/1000)] = ids.length;

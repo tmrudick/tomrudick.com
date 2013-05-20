@@ -54,9 +54,7 @@ p {
 }
 
 .landscape-large {
-        background: #000;
-        vertical-align: top;
-
+    vertical-align: top;
     height: 281px;
     width: 281px;
 }
@@ -65,8 +63,6 @@ p {
 }
 
 .landscape-small {
-        background: #000;
-
     height: 140px;
     width: 140px;
 }
@@ -77,9 +73,7 @@ p {
 }
 
 .portrait-large {
-        background: #000;
-        vertical-align: top;
-
+    vertical-align: top;
     height: 281px;
     width: 281px;
 
@@ -90,7 +84,6 @@ p {
 }
 
 .portrait-small {
-    background: #000;
     height: 140px;
     width: 140px;
 }
@@ -107,15 +100,20 @@ p {
     width: 480px;
     display: inline-block;
 }
-.highlight {
+.cropped {
     position: relative;
 }
-.highlight p {
+.cropped p {
+    display: none;
+}
+.cropped:hover p {
     display: block;
+    padding: 5px;
     position: absolute;
     bottom: 0;
     left: 0;
     background: #fff;
+    opacity: 0.7;
     width: 100%;
-    line-height: 2em;
+    margin-bottom: 0px;
 }
