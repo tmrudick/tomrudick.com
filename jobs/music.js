@@ -51,7 +51,7 @@ job('music', '10 min', function(done, previous) {
  * Gets the last 5 unique album covers for tracks that I have been listening to
  */
 job('album_covers', '1hour', function(done) {
-    var url = 'https://graph.facebook.com/me/music.listens?access_token=' + access_token;
+    var url = 'https://graph.facebook.com/me/music.listens?limit=200&access_token=' + access_token;
 
     var cover_urls = {};
 
@@ -164,7 +164,7 @@ function _getSongsForDate(date, url, callback) {
     // with a date and a callback function.
     if (typeof url === 'function') {
         callback = url;
-        url = 'https://graph.facebook.com/me/music.listens?access_token=' + access_token;
+        url = 'https://graph.facebook.com/me/music.listens?limit=200&access_token=' + access_token;
     }
 
     // All the songs we found so far
@@ -224,6 +224,8 @@ function _cachedRequest(url, callback) {
 
     request.get({ url: url, json: true }, function(err, response) {
         if (!_requestCache[url]) {
+            console.log('Requesting ', url);
+
             _requestCache[url] = [err, response];
         }
 

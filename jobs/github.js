@@ -2,7 +2,7 @@
 
 var request = require('request');
 
-/* 
+/*
  * Returns info about my github project activity.
  * This only take into account my public feed.
  */
@@ -20,13 +20,15 @@ job('projects', '1 day', function(done) {
         });
 
         // Loop over them and take the first PushEvent
-        response.body.forEach(function(event) {
+        for (var i = 0; i < response.body.length; i++) {
+            var event = response.body[i];
+
             if (event.type === 'PushEvent') {
                 return done({
                     most_recent: project_from_event(event)
                 });
             }
-        });
+        }
 
         // No push event? Since this means that I haven't commited any code in the last
         // 30 days or so, it probably means that I've got bigger problems in my life

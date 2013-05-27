@@ -31,7 +31,7 @@ job('programming_age', '1 day', function(done) {
 
 /**
  * Return a single object for how much I am walking today.
- * Runs often
+ * Runs often and gets data for the last 30 days.
  **/
 job('walking', '20min', function(done) {
     var today = moment().format('YYYY-MM-DD');

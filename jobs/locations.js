@@ -3,7 +3,7 @@ var request = require('request'),
     foursquare_auth_token = require('../config.json').tokens.foursquare.auth_token;
 
 /**
- * Checkins within the last rolling 7 days
+ * Checkins within the last rolling 7 days from foursquare.
  */
 job('checkins', '30min', function(done) {
     // Get a date object from seven days ago (to cover a rolling week)
@@ -50,4 +50,4 @@ job('checkins', '30min', function(done) {
             top_category: top_category
         });
     });
-}).expiration(0); // Always expire the entire array
+}).expiration(0); // Always expire the entire array since we get all 7 days each time
