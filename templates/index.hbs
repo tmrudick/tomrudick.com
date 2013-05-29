@@ -113,6 +113,17 @@
 
                 yAxis.render();
 
+                var max_height = function(series, addition) {
+                    var max_value = 0;
+                    for (var i = 0; i < series.length; i++) {
+                        if (series[i].y > max_value) {
+                            max_value = series[i].y;
+                        }
+                    }
+
+                    return Math.ceil(max_value + addition);
+                };
+
                 // WALKING CHART
                 var walking_graph = new Rickshaw.Graph( {
                     element: document.getElementById("walking-chart"),
@@ -121,6 +132,8 @@
                     renderer: 'line',
                     stroke: true,
                     preserve: true,
+                    min: 0,
+                    max: max_height(walking_data, 2),
                     series: [
                         {
                             color: '#81ad00',
