@@ -12,6 +12,9 @@ job('music', '10 min', function(done, previous) {
     var today = moment().format('YYYY-MM-DD');
     today = moment(today + ' -0400', 'YYYY-MM-DD Z')
 
+    // Clear cache
+    _requestCache = {};
+
     var music = {
         today: {}
     };
