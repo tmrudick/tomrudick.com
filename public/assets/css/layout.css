@@ -117,3 +117,8 @@ p {
     width: 100%;
     margin-bottom: 0px;
 }
+.tonic {
+    text-align: center;
+    margin: 25px 0;
+    font-size: 75%;
+}

@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>tomrudick.com</title>
-        <link rel="stylesheet" type="text/css" href="assets/layout.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/layout.css">
         <link rel="stylesheet" type="text/css" href="assets/css/rickshaw.min.css">
         <script src="assets/js/jquery.js"></script>
         <script src="assets/js/d3.min.js"></script>
@@ -23,16 +23,20 @@
 
         <div class="section" id="bio">
             <p>Hi! I'm Tom. I currently live in Brooklyn, NY and help build data analytics tools for <a href="http:/www.spotify.com">Spotify</a>. I've been writing software for just over {{programming_age}} years and I still think it is lots of fun.</p>
-            <p>I used to live in Seattle where I became an avid bow-tie enthusiast, coffee lover, and acquired a special penchant for strong mixed drinks. Brooklyn is great but I still miss Analog Coffee, Sun Liquor, and Five Point. I'll probably move back some day.</p>
+            <p>I used to live in Seattle where I became an avid bow-tie enthusiast, heavy coffee, drinker and discovered a love of a good mixed drink.</p>
         </div>
 
         <div class="section" id="projects">
-            <p>Most people tell me that I am working on too many side projects but I'm just trying to have work/work balance. I've been most recently working on {{{link projects.most_recent.name projects.most_recent.url}}}.</p>
-            <p>Last year, I <a href="http://rudickulous.com/post/38727951707/how-to-paint-a-mural">painted a mural</a> in Seattle with a whole bunch of strangers. It was probably one of the better projects that I've started.</p>
+            <p>Some people tell me that I am working on too many side projects but I just think that they aren't working on enough of their own. I've been most recently working on {{{link projects.most_recent.name projects.most_recent.url}}}.</p>
         </div>
 
         <div class="section" id="music">
-            <p>I really like music. I've already listened to {{music.today.total}} songs today.</p>
+            <p>Music is pretty great. Open office spaces and the subway encourage me to listen to more music than I used to.
+                {{#if music.today.total}}
+                    I've already listened to {{music.today.total}} songs today.</p>
+                {{else}}
+                    Although, I haven't listened to anything yet today...
+                {{/if}}
             <div id="music-chart"></div>
             <div id="albums">
                 <ul class='horizontal-list'>
@@ -44,12 +48,15 @@
         </div>
 
         <div class="section" id="locations">
-            <p>This week, I've checked into {{checkins.recent.length}} places. Most of them have been {{checkins.top_category}}.</p>
+            <p>This week, I've checked into {{checkins.recent.length}} places. The plurality of them have been {{checkins.top_category}}.</p>
             <div id="map"></div>
         </div>
 
         <div class="section" id="health">
-            <p>I usually try to walk as much as I can. Some days I'm better than others. Today, I've walked {{walking.today}} miles so far.</p>
+            <p>I usually try to walk as much as I can. Some days I'm better than others.
+                {{#if walking.today}}
+                Today, I've walked {{walking.today}} miles so far.
+                {{/if}}</p>
             <div id="walking-chart"></div>
         </div>
 
@@ -66,7 +73,7 @@
 
         <div class="section" id="contact">
                 <p>Feel free to contact me via <a href="mailto:tom@tomrudick.com">email</a>, <a href="http://twitter.com/tmrudick">twitter</a>, <a href="http://facebook.com/tmrudick">facebook</a>, <a href="http://open.spotify.com/user/tmrudick">spotify</a>, or <a href="http://www.linkedin.com/in/tomrudick">linkedin</a>.</p>
-                <p>Also, check out my personal <a href="http://api.tomrudick.com">api</a>.</p>
+                <p class="tonic"><a href="http://api.tomrudick.com">api.tomrudick.com</a> | Built with <a href="http://www.github.com/tmrudick/tonic">tonic</a>.
         </div>
         <script>
             $(function() {
