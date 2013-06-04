@@ -1,0 +1,43 @@
+var Maps = function() {
+    function createMarker(point, map) {
+        // Create a marker and add it to the map
+        var marker = new google.maps.Marker({
+            position: point.location,
+            map: map
+        });
+
+        var content = "<p><strong>" + point.timestamp + "</strong>: <a href=\"" + point.url + "\">" + point.name + "</a></p>";
+
+        google.maps.event.addListener(marker, 'click', function() {
+            infoWindow.setContent(content);
+            infoWindow.open(map,marker);
+        });
+    }
+
+    var mapOptions = {
+        center: new google.maps.LatLng(40.7111, -73.9565),
+        zoom: 8,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        scrollwheel: false
+    };
+
+    return {
+        init: function(element) {
+            var map = new google.maps.Map(document.getElementById(element), mapOptions);
+            var infoWindow = new google.maps.InfoWindow();
+
+            var points = [
+                {{#each checkins.recent}}
+                { location: new google.maps.LatLng({{this.location.lat}},{{this.location.lng}}), timestamp: '{{this.timestamp}}', name: "{{this.name}}", url: "{{this.url}}" },{{/each}}
+            ];
+
+            var bounds = new google.maps.LatLngBounds();
+            for (var i = 0; i < points.length; i++) {
+                createMarker(points[i], map);
+                bounds.extend(points[i].location);
+            }
+
+            map.fitBounds(bounds);
+        }
+    };
+}();

@@ -9,6 +9,10 @@
         <script src="assets/js/d3.layout.min.js"></script>
         <script src="assets/js/rickshaw.js"></script>
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkpZmSbzKSiiBQ4cF3LJNoMlVSZvFcNp8&sensor=false"></script>
+        <script src="assets/js/music.js"></script>
+        <script src="assets/js/maps.js"></script>
+        <script src="assets/js/walking.js"></script>
+
     </head>
     <body>
         <div id="header">
@@ -62,152 +66,13 @@
 
         <div class="section" id="contact">
                 <p>Feel free to contact me via <a href="mailto:tom@tomrudick.com">email</a>, <a href="http://twitter.com/tmrudick">twitter</a>, <a href="http://facebook.com/tmrudick">facebook</a>, <a href="http://open.spotify.com/user/tmrudick">spotify</a>, or <a href="http://www.linkedin.com/in/tomrudick">linkedin</a>.</p>
+                <p>Also, check out my personal <a href="http://api.tomrudick.com">api</a>.</p>
         </div>
         <script>
-            var data = {{json music_monthly}};
-            var walking_data = {{json walking.monthly}}
-
             $(function() {
-                var series_data = [];
-                for (var i = 0; i < data.length; i++) {
-                    series_data.push({
-                        x: data[i][0],
-                        y: data[i][1]
-                    })
-                }
-
-                series_data.push({
-                    x: {{ music.today.timestamp}},
-                    y: {{ music.today.total }}
-                })
-
-                var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
-                var graph = new Rickshaw.Graph( {
-                    element: document.getElementById("music-chart"),
-                    width: 780,
-                    height: 150,
-                    renderer: 'bar',
-                    stroke: true,
-                    preserve: true,
-                    series: [
-                        {
-                            color: '#81ad00',
-                            data: series_data,
-                            name: 'Listens'
-                        }
-                    ]
-                });
-
-                graph.render();
-
-                var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-                    graph: graph
-                });
-
-                var ticksTreatment = 'glow';
-                var yAxis = new Rickshaw.Graph.Axis.Y( {
-                    graph: graph,
-                    tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-                    ticksTreatment: ticksTreatment
-                });
-
-                yAxis.render();
-
-                var max_height = function(series, addition) {
-                    var max_value = 0;
-                    for (var i = 0; i < series.length; i++) {
-                        if (series[i].y > max_value) {
-                            max_value = series[i].y;
-                        }
-                    }
-
-                    return Math.ceil(max_value + addition);
-                };
-
-                // WALKING CHART
-                var walking_graph = new Rickshaw.Graph( {
-                    element: document.getElementById("walking-chart"),
-                    width: 780,
-                    height: 150,
-                    renderer: 'line',
-                    stroke: true,
-                    preserve: true,
-                    min: 0,
-                    max: max_height(walking_data, 2),
-                    series: [
-                        {
-                            color: '#81ad00',
-                            data: walking_data,
-                            name: 'Miles'
-                        }
-                    ]
-                });
-
-                walking_graph.render();
-
-                new Rickshaw.Graph.HoverDetail( {
-                    graph: walking_graph
-                });
-
-                var time = new Rickshaw.Fixtures.Time();
-
-                var ticksTreatment = 'glow';
-                var xAxis = new Rickshaw.Graph.Axis.Time({
-                    graph: walking_graph,
-                    timeUnit: time.unit('day')
-                });
-
-                xAxis.render();
-
-                var walking_yAxis = new Rickshaw.Graph.Axis.Y( {
-                    graph: walking_graph,
-                    tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-                    ticksTreatment: ticksTreatment
-                });
-
-                walking_yAxis.render();
-
-
-                var mapOptions = {
-                    center: new google.maps.LatLng(40.7111, -73.9565),
-                    zoom: 8,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    scrollwheel: false
-                };
-                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-                var infoWindow = new google.maps.InfoWindow();
-
-                    var points = [
-                    {{#each checkins.recent}}
-                    { location: new google.maps.LatLng({{this.location.lat}},{{this.location.lng}}),
-                      timestamp: '{{this.timestamp}}',
-                      name: "{{this.name}}",
-                      url: "{{this.url}}"
-                    },
-                    {{/each}}
-                ];
-
-                function createMarker(point) {
-                    var marker = new google.maps.Marker({
-                        position: point.location,
-                        map: map
-                    });
-
-                    var content = "<p><strong>" + point.timestamp + "</strong>: <a href=\"" + point.url + "\">" + point.name + "</a></p>";
-
-                    google.maps.event.addListener(marker, 'click', function() {
-                        infoWindow.setContent(content);
-                        infoWindow.open(map,marker);
-                    });
-                }
-
-                var bounds = new google.maps.LatLngBounds();
-                for (var i = 0; i < points.length; i++) {
-                    createMarker(points[i]);
-                    bounds.extend(points[i].location);
-                }
-
-                map.fitBounds(bounds);
+                Music.init('music-chart');
+                Maps.init('map');
+                Walking.init('walking-chart');
             });
         </script>
     </body>

@@ -1,0 +1,60 @@
+var Walking = function() {
+    var data = {{json walking.monthly}};
+
+    return {
+        init: function(element) {
+            var max_height = function(series, addition) {
+                var max_value = 0;
+                for (var i = 0; i < series.length; i++) {
+                    if (series[i].y > max_value) {
+                        max_value = series[i].y;
+                    }
+                }
+
+                return Math.ceil(max_value + addition);
+            };
+
+            var graph = new Rickshaw.Graph( {
+                element: document.getElementById(element),
+                width: 780,
+                height: 150,
+                renderer: 'line',
+                stroke: true,
+                preserve: true,
+                min: 0,
+                max: max_height(data, 2),
+                series: [
+                    {
+                        color: '#81ad00',
+                        data: data,
+                        name: 'Miles'
+                    }
+                ]
+            });
+
+            graph.render();
+
+            new Rickshaw.Graph.HoverDetail( {
+                graph: graph
+            });
+
+            var time = new Rickshaw.Fixtures.Time();
+
+            var ticksTreatment = 'glow';
+            var xAxis = new Rickshaw.Graph.Axis.Time({
+                graph: graph,
+                timeUnit: time.unit('day')
+            });
+
+            xAxis.render();
+
+            var walking_yAxis = new Rickshaw.Graph.Axis.Y( {
+                graph: graph,
+                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                ticksTreatment: ticksTreatment
+            });
+
+            walking_yAxis.render();
+        }
+    }
+}();
