@@ -1,0 +1,54 @@
+var Email = function() {
+    return {
+        init: function(element) {
+            var sent_series = {{json gmail_traffic.sent}};
+            var received_series = {{json gmail_traffic.received}};
+
+            var graph = new Rickshaw.Graph( {
+                element: document.getElementById(element),
+                width: 780,
+                height: 150,
+                renderer: 'bar',
+                stroke: true,
+                preserve: true,
+                series: [
+                    {
+                        data: sent_series,
+                        name: 'Sent',
+                        color: '#356aa0',
+                    },
+                    {
+                        data: received_series,
+                        name: 'Received',
+                        color: '#b02b2c',
+                    }
+                ]
+            });
+
+            graph.renderer.unstack = true;
+            graph.render();
+
+            var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+                graph: graph
+            });
+
+            var time = new Rickshaw.Fixtures.Time();
+
+            var ticksTreatment = 'glow';
+            var xAxis = new Rickshaw.Graph.Axis.Time({
+                graph: graph,
+                timeUnit: time.unit('day')
+            });
+
+            xAxis.render();
+
+            var yAxis = new Rickshaw.Graph.Axis.Y( {
+                graph: graph,
+                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                ticksTreatment: ticksTreatment
+            });
+
+            yAxis.render();
+        }
+    }
+}();

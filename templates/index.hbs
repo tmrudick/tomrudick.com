@@ -12,7 +12,7 @@
         <script src="assets/js/music.js"></script>
         <script src="assets/js/maps.js"></script>
         <script src="assets/js/walking.js"></script>
-
+        <script src="assets/js/email.js"></script>
     </head>
     <body>
         <div id="header">
@@ -52,12 +52,18 @@
             <div id="map"></div>
         </div>
 
+        <div class="section" id="email">
+            <p>Email is probably the best way to reach me. But, as you can see, I get much more email than I send.</p>
+            <div id="emails-sent-chart" />
+        </div>
+
         <div class="section" id="health">
             <p>I usually try to walk as much as I can. Some days I'm better than others.
                 {{#if walking.today}}
                 Today, I've walked {{walking.today}} miles so far.
                 {{/if}}</p>
             <div id="walking-chart"></div>
+            <p>I lost my Fitbit tracker this week. So, this graph is a little light on data...</p>
         </div>
 
         <div class="section" id="eight30six">
@@ -80,6 +86,7 @@
                 Music.init('music-chart');
                 Maps.init('map');
                 Walking.init('walking-chart');
+                Email.init('emails-sent-chart');
             });
         </script>
     </body>
