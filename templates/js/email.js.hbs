@@ -32,6 +32,21 @@ var Email = function() {
                 graph: graph
             });
 
+            var time = new Rickshaw.Fixtures.Time();
+
+            var formatter = time.unit('day');
+            formatter.formatter = function(d) {
+                switch(d.getDay()) {
+                    case 0: return 'Sun';
+                    case 1: return 'Mon';
+                    case 2: return 'Tue';
+                    case 3: return 'Wed';
+                    case 4: return 'Thurs';
+                    case 5: return 'Fri';
+                    case 6: return 'Sat'
+                };
+            };
+
             var yAxis = new Rickshaw.Graph.Axis.Y( {
                 graph: graph,
                 tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
