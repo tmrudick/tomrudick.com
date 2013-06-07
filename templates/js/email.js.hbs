@@ -32,20 +32,10 @@ var Email = function() {
                 graph: graph
             });
 
-            var time = new Rickshaw.Fixtures.Time();
-
-            var ticksTreatment = 'glow';
-            var xAxis = new Rickshaw.Graph.Axis.Time({
-                graph: graph,
-                timeUnit: time.unit('day')
-            });
-
-            xAxis.render();
-
             var yAxis = new Rickshaw.Graph.Axis.Y( {
                 graph: graph,
                 tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-                ticksTreatment: ticksTreatment
+                ticksTreatment: 'glow'
             });
 
             yAxis.render();

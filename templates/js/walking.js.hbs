@@ -38,6 +38,11 @@ var Walking = function() {
                 graph: graph
             });
 
+            var annotator = new Rickshaw.Graph.Annotate({
+                graph: graph,
+                element: document.getElementById('timeline')
+            });
+
             var time = new Rickshaw.Fixtures.Time();
 
             var ticksTreatment = 'glow';
@@ -48,13 +53,17 @@ var Walking = function() {
 
             xAxis.render();
 
-            var walking_yAxis = new Rickshaw.Graph.Axis.Y( {
+            var yAxis = new Rickshaw.Graph.Axis.Y( {
                 graph: graph,
                 tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
                 ticksTreatment: ticksTreatment
             });
 
-            walking_yAxis.render();
+            yAxis.render();
+            annotator.add(1369972800, 'Lost my fitbit');
+            annotator.add(1370491200, 'Got a new fitbit');
+
+            graph.update();
         }
     }
 }();
