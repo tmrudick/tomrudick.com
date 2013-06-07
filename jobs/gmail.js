@@ -1,7 +1,7 @@
 var request = require('request');
 
 job('gmail_traffic', '20m', function(done) {
-    var url = 'https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&output=csv';
+    var url = 'https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=0&range=A1%3AB8&output=csv';
 
     request.get(url, function(err, res) {
         var csv = res.body;
