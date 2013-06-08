@@ -16,7 +16,9 @@ job('music', '10 min', function(done, previous) {
     _requestCache = {};
 
     var music = {
-        today: {}
+        today: {
+            songs: []
+        }
     };
 
     // Get a list of all of the song ids that I listened to today
@@ -35,7 +37,6 @@ job('music', '10 min', function(done, previous) {
         // Lookup the full track names, artists, and urls for
         // the first five ids.
         _lookupSongs(ids.slice(0, 5), function(songs) {
-            music.today.songs = [];
             songs.forEach(function(song) {
                 music.today.songs.push({
                     title: song.title,
