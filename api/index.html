@@ -9,18 +9,15 @@
     <body>
         <h1>api.tomrudick.com</h1>
 
-        <p>This is an API for me. It is used to power my <a href="http://tomrudick.com">personal website</a>.</p>
-        <p>All data is aggregated from various external APIs and merged together to provide a single view into my digital life. Most of the data is in real-time or with very slight delays. More endpoints will be added as I can find the time. Additional feeds that I want to add are Github activity, daily step counts, sleep and weight data, and time spent commuting per day.</p>
+        <p>This is an API for me. It is used to power my <a href="http://tomrudick.com">personal website</a> but I will probably find other interesting ways to use it.</p>
+        <p>All data is aggregated from various external APIs and merged together to provide a single view into my digital life. Most of the data is in real-time or with very slight delays. More endpoints will be added as I can find the time. Additional feeds that I want to add are Github activity, daily step counts, sleep and weight data, time spent commuting per day, and inbox counts.</p>
 
         <h2>Endpoints</h2>
         <p>All endpoints will return JSON data regardless of any request headers and are completely public.</p>
         <div class="endpoint">
-            <p class="url">/v1/music</p>
+            <p class="url"><a href="/v1/music">/v1/music</a></p>
             <p class="description">Every song that I have listened to today.</p>
-            <p class="section-title">Example Response</p>
-            <pre>
-                <code>
-[{
+            <pre><code>[{
   "title": "Red Star",
   "timestamp": 1370655923000,
   "artist": "Freelance Whales",
@@ -38,35 +35,25 @@
   "artist": "Electric Six",
   "url": "http:\/\/open.spotify.com\/track\/3R4n4d2XZEbZz9av18quL5",
   "image": "http:\/\/o.scdn.co\/image\/69da52f57ca662cf6832ce3c1b218dd513eee47f"
-}]
-                </code>
-            </pre>
+}]</code></pre>
         </div>
 
         <div class="endpoint">
-            <p class="url">/v1/distance</p>
+            <p class="url"><a href="/v1/distance">/v1/distance</a></p>
             <p class="description">Distance (in miles) that I have walked for the last 30 days.</p>
-            <p class="section-title">Example Response</p>
-                <pre>
-                    <code>
-[{
+                <pre><code>[{
     "timestamp": 1370655923000,
     "distance": 3.4
 }, {
     "timestamp": 1370491200000,
     "distance": 1.1
-}]
-                    </code>
-                </pre>
+}]</code></pre>
         </div>
 
         <div class="endpoint">
-            <p class="url">/v1/email/traffic</p>
+            <p class="url"><a href="/v1/email/traffic">/v1/email/traffic</a></p>
             <p class="description">Aggregated count of the number of emails that I have sent and received for the last 14 days.</p>
-            <p class="section-title">Example Response</p>
-                <pre>
-                    <code>
-[{
+                <pre><code>[{
     "timestamp": 1370655923000,
     "sent": 5,
     "received": 10
@@ -74,18 +61,13 @@
     "timestamp": 1370491200000,
     "sent": 0,
     "received": 2
-}]
-                    </code>
-                </pre>
+}]</code></pre>
         </div>
 
         <div class="endpoint">
-            <p class="url">/v1/checkins</p>
+            <p class="url"><a href="/v1/checkins">/v1/checkins</a></p>
             <p class="description">Checkin and location data for the past 7 days.</p>
-            <p class="section-title">Example Response</p>
-            <pre>
-                <code>
-[{
+            <pre><code>[{
     "name": "Spotify",
     "location": {
       "address": "76 9th Ave",
@@ -115,9 +97,7 @@
     },
     "timestamp": 1370491200000,
     "url": "http:\/\/www.bluebottlecoffee.net"
-}]
-                </code>
-            </pre>
+}]</code></pre>
         </div>
     <div class="section">
         <p>Data is currently aggregated from the following services: Spotify, Facebook, Foursquare, Fitbit, and GMail.</p>
