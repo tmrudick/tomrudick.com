@@ -39,6 +39,7 @@ job('music', '10 min', function(done, previous) {
         _lookupSongs(ids.slice(0, 5), function(songs) {
             songs.forEach(function(song) {
                 music.today.songs.push({
+                    timestamp: new Date(song.updated_time).getTime(),
                     title: song.title,
                     artist: song.data.musician[0].name,
                     url: song.url,

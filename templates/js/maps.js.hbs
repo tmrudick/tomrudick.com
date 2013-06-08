@@ -28,7 +28,7 @@ var Maps = function() {
 
             var points = [
                 {{#each checkins.recent}}
-                { location: new google.maps.LatLng({{this.location.lat}},{{this.location.lng}}), timestamp: '{{this.timestamp}}', name: "{{this.name}}", url: "{{this.url}}" },{{/each}}
+                { location: new google.maps.LatLng({{this.location.lat}},{{this.location.lng}}), timestamp: '{{this.friendly_timestamp}}', name: "{{this.name}}", url: "{{this.url}}" },{{/each}}
             ];
 
             var bounds = new google.maps.LatLngBounds();

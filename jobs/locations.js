@@ -30,7 +30,8 @@ job('checkins', '30min', function(done) {
             locations.push({
                 name: location.venue.name,
                 location: location.venue.location,
-                timestamp: moment(location.createdAt * 1000).fromNow(),
+                timestamp: location.createdAt * 1000,
+                friendly_timestamp: moment(location.createdAt * 1000).fromNow(),
                 url: location.venue.url || location.venue.canonicalUrl
             })
         });
