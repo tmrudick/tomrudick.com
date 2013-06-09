@@ -35,6 +35,8 @@ job('programming_age', '1 day', function(done) {
  **/
 job('walking', '20min', function(done) {
     var today = moment().format('YYYY-MM-DD');
+    today = moment(today + ' -0400', 'YYYY-MM-DD Z')
+    today = today.format('YYYY-MM-DD');
 
     request.get('http://api.fitbit.com/1/user/-/activities/distance/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
         var response = JSON.parse(res);
