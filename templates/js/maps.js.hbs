@@ -1,5 +1,5 @@
 var Maps = function() {
-    function createMarker(point, map) {
+    function createMarker(point, map, infoWindow) {
         // Create a marker and add it to the map
         var marker = new google.maps.Marker({
             position: point.location,
@@ -33,7 +33,7 @@ var Maps = function() {
 
             var bounds = new google.maps.LatLngBounds();
             for (var i = 0; i < points.length; i++) {
-                createMarker(points[i], map);
+                createMarker(points[i], map, infoWindow);
                 bounds.extend(points[i].location);
             }
 
