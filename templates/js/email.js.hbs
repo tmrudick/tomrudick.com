@@ -42,3 +42,41 @@ var Email = function() {
         }
     }
 }();
+
+var Inbox = function() {
+    return {
+        init: function(element) {
+            var data = {{json gmail_inbox.counts}};
+
+            var graph = new Rickshaw.Graph( {
+                element: document.getElementById(element),
+                width: 780,
+                height: 150,
+                renderer: 'line',
+                stroke: true,
+                preserve: true,
+                series: [
+                    {
+                        data: data,
+                        name: 'Emails',
+                        color: '#356aa0',
+                    }
+                ]
+            });
+
+            graph.render();
+
+            var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+                graph: graph
+            });
+
+            var yAxis = new Rickshaw.Graph.Axis.Y( {
+                graph: graph,
+                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                ticksTreatment: 'glow'
+            });
+
+            yAxis.render();
+        }
+    }
+}();

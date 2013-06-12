@@ -18,6 +18,21 @@ module.exports = function(Handlebars) {
         );
     });
 
+    Handlebars.registerHelper('inbox_api', function(data) {
+        var result = [];
+
+        for (var i = 0; i < data.counts.length; i++) {
+            result.push({
+                timestamp: data[i].x,
+                emails: data[i].y,
+            })
+        }
+
+        return new Handlebars.SafeString(
+            JSON.stringify(result, null, 2)
+        );
+    });
+
     Handlebars.registerHelper('distance_api', function(data) {
         var result = [];
 

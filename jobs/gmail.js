@@ -32,3 +32,36 @@ job('gmail_traffic', '20m', function(done) {
         });
     });
 });
+
+job('gmail_inbox', '30m', function(done) {
+    var url = "https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=2&range=A1%3AC8&output=csv";
+
+    request.get(url, function(err, res) {
+        var csv = res.body;
+        csv = csv.split('\n');
+
+        var result = {
+            counts: []
+        };
+
+        csv.forEach(function(row, index) {
+            if (index === 0) { return; }
+
+            var values = row.split(',');
+            var timestamp = +values[0];
+            result.counts.unshift({
+                x: timestamp,
+                y: +values[1]
+            });
+
+            if (index === 1) {
+                result.today = {
+                    count: +values[1],
+                    time: values[2]
+                };
+            }
+        });
+
+        done(result);
+    });
+});
