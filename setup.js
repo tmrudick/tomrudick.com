@@ -23,9 +23,9 @@ module.exports = function(Handlebars) {
 
         for (var i = 0; i < data.counts.length; i++) {
             result.push({
-                timestamp: data[i].x,
-                emails: data[i].y,
-            })
+                timestamp: data.counts[i].x,
+                emails: data.counts[i].y
+            });
         }
 
         return new Handlebars.SafeString(
