@@ -48,6 +48,21 @@ module.exports = function(Handlebars) {
         );
     });
 
+    Handlebars.registerHelper('weight_api', function(data) {
+        var result = [];
+
+        data.monthly.forEach(function(value) {
+            result.push({
+                timestamp: value.x,
+                weight: value.y
+            })
+        });
+
+        return new Handlebars.SafeString(
+            JSON.stringify(result, null, 2)
+        );
+    });
+
     Handlebars.registerHelper('checkins_api', function(data) {
         data.forEach(function(value) {
             delete value.friendly_timestamp;
