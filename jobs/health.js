@@ -83,7 +83,7 @@ job('weight', '1day', function(done) {
 
         done(result);
     });
-});
+}).disable();
 
 job('sleep', '1day', function(done) {
     var today = moment().format('YYYY-MM-DD');
@@ -110,7 +110,7 @@ job('sleep', '1day', function(done) {
 
         done(result);
     });
-});
+}).disable();
 
 job('falling_asleep', '1day', function(done) {
     var today = moment().format('YYYY-MM-DD');
@@ -137,4 +137,4 @@ job('falling_asleep', '1day', function(done) {
 
         done(result);
     });
-});
+}).disable();
