@@ -1,21 +1,11 @@
 var Music = function() {
-    var data = {{json music_monthly}};
-
     return {
         init: function(element) {
             var data = {{json music_monthly}};
 
-            var series_data = [];
-            for (var i = 0; i < data.length; i++) {
-                series_data.push({
-                    x: data[i][0],
-                    y: data[i][1]
-                })
-            }
-
-            series_data.push({
-                x: {{ music.today.timestamp}},
-                y: {{ music.today.total }}
+            data.push({
+                x: {{ music_daily.timestamp}},
+                y: {{ music_daily.total }}
             })
 
             var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
@@ -29,7 +19,7 @@ var Music = function() {
                 series: [
                     {
                         color: '#81ad00',
-                        data: series_data,
+                        data: data,
                         name: 'Listens'
                     }
                 ]
