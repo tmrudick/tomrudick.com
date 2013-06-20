@@ -79,11 +79,10 @@ job('music_monthly', '1 day', function(done, existing_data) {
     }
 
     var end_date = moment.utc().subtract(4, 'hours').timeless(4);
-        start_date = end_date.subtract(1, 'day');
+        start_date = end_date.clone().subtract(1, 'day');
 
     // If we have yesterday, don't do aanything
     var up_to_date = !existing_data.every(function(data) {
-        console.log(data.x, start_date.valueOf() / 1000, data.x != start_date.valueOf() / 1000);
         return data.x != start_date.valueOf() / 1000;
     });
 
