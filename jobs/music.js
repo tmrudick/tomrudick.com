@@ -25,7 +25,7 @@ job('music_daily', '10 min', function(done, previous) {
         var today = _tzOffset(-4);
 
         // Return the length of how many ids were returned
-        done(ids[today].length);
+        done({ timestamp: today, total: ids[today].length });
     });
 });
 
@@ -57,7 +57,7 @@ job('album_covers', '1hour', function(done) {
                     });
                 });
 
-                done(cover_urls);
+                done(covers);
             } else {
                 _lookupSongs([response.body.data.shift().data.song.id], function(songs) {
                     cover_urls[songs[0].image[0].url] = songs[0].url;
@@ -98,7 +98,7 @@ job('music_monthly', '1 day', function(done, existing_data) {
     _getSongIdsForDateRange(start_date, end_date, function(days) {
         Object.keys(days).forEach(function(key) {
             existing_data.push({
-                x: key,
+                x: +key,
                 y: days[key].length
             });
         });
