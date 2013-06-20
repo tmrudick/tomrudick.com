@@ -3,52 +3,29 @@ var request = require('request');
 var moment = require('moment');
 var access_token = require('../config.json').tokens.facebook.access_token;
 
+moment.fn.timeless = function(offset) {
+    offset = offset || 0;
+    return this.clone().hours(offset).minutes(0).seconds(0).milliseconds(0);
+}
+
 /*
  * Gets recent music activity from Facebook.
  * Returns the total number of songs that I've listened to today
  * as well as the last 5 songs.
  */
-job('music', '10 min', function(done, previous) {
-    var today = moment().format('YYYY-MM-DD');
-    today = moment(today + ' -0400', 'YYYY-MM-DD Z')
+job('music_daily', '10 min', function(done, previous) {
+    // Get the current datetime at 4am UTC / 12am EDT
+    var start_time = moment.utc().subtract(4, 'hours').timeless(4);
 
-    // Clear cache
-    _requestCache = {};
+    // Get the end time 24 hours from the start
+    var end_time = start_time.clone().add(24, 'hours');
 
-    var music = {
-        today: {
-            songs: []
-        }
-    };
+    // Get a list of all of the ids that I listened to today
+    _getSongIdsForDateRange(start_time, end_time, function(ids) {
+        var today = _tzOffset(-4);
 
-    // Get a list of all of the song ids that I listened to today
-    _getSongsForDate(today, function(ids) {
-        // Store how many songs I listened to today
-        music.today.total = ids.length;
-        music.today.timestamp = Math.floor(today.valueOf() / 1000);
-
-        // If we haven't listened to any songs yet today,
-        // just return the last few songs we found
-        if (ids.length === 0) {
-            //music.today.songs = previous.today.songs;
-            done(music);
-        }
-
-        // Lookup the full track names, artists, and urls for
-        // the first five ids.
-        _lookupSongs(ids.slice(0, 5), function(songs) {
-            songs.forEach(function(song) {
-                music.today.songs.push({
-                    timestamp: new Date(song.updated_time).getTime(),
-                    title: song.title,
-                    artist: song.data.musician[0].name,
-                    url: song.url,
-                    image: song.image[0].url
-                });
-            });
-
-            done(music);
-        });
+        // Return the length of how many ids were returned
+        done(ids[today].length);
     });
 });
 
@@ -56,45 +33,41 @@ job('music', '10 min', function(done, previous) {
  * Gets the last 5 unique album covers for tracks that I have been listening to
  */
 job('album_covers', '1hour', function(done) {
-    var url = 'https://graph.facebook.com/me/music.listens?limit=200&access_token=' + access_token;
+    // Request 50 songs
+    var url = 'https://graph.facebook.com/me/music.listens?limit=50&access_token=' + access_token;
 
+    // Create an object to hold image_url -> song_url mappings
     var cover_urls = {};
 
-    var getTrackIds = function(url) {
-        request.get({ url: url, json: true}, function(err, response) {
-            var ids = []
-            response.body.data.forEach(function(song) {
-                ids.push(song.data.song.id);
-            });
+    // Make the request to facebook
+    request.get({ url: url, json: true}, function(err, response) {
+        // Process next id will pop albums off of the response and then
+        // check to see if we have a unique image url. If we do, then use it, if not
+        // call ourselves again. I very highly doubt that we can't find 5 unique images
+        // in 50 tracks.
+        var processNextId = function() {
+            if (Object.keys(cover_urls).length === 5 || response.body.data.length === 0) {
+                var keys = Object.keys(cover_urls);
+                var covers = [];
 
-            var getNextUrl = function() {
-                if (Object.keys(cover_urls).length === 5) {
-                    var keys = Object.keys(cover_urls);
-                    var covers = [];
-                    for (var idx = 0; idx < keys.length; idx++) {
-                        var key = keys[idx];
-                        covers.push({
-                            url: cover_urls[key],
-                            image: key
-                        });
-                    }
-                    done(covers);
-                } else if (ids.length === 0 && Object.keys(cover_urls).length < 5) {
-                    getTrackIds(response.body.paging.next);
-                } else {
-                    _lookupSongs([ids.shift()], function(songs) {
-                        cover_urls[songs[0].image[0].url] = songs[0].url;
-                        getNextUrl()
+                keys.forEach(function(key) {
+                    covers.push({
+                        url: cover_urls[key],
+                        image: key
                     });
-                }
+                });
+
+                done(cover_urls);
+            } else {
+                _lookupSongs([response.body.data.shift().data.song.id], function(songs) {
+                    cover_urls[songs[0].image[0].url] = songs[0].url;
+                    processNextId();
+                });
             }
+        };
 
-            getNextUrl();
-        });
-    };
-
-    getTrackIds(url);
-
+        processNextId();
+    });
 }).expiration(0);
 
 /*
@@ -105,104 +78,128 @@ job('music_monthly', '1 day', function(done, existing_data) {
         existing_data = [];
     }
 
-    var obj = _toObject(existing_data);
+    var end_date = moment.utc().subtract(4, 'hours').timeless(4);
+        start_date = end_date.subtract(1, 'day');
 
-    var yesterday = moment().subtract('days', 1).format('YYYY-MM-DD');
-    yesterday = moment(yesterday + ' -0400', 'YYYY-MM-DD Z')
+    // If we have yesterday, don't do aanything
+    var up_to_date = !existing_data.every(function(data) {
+        console.log(data.x, start_date.valueOf() / 1000, data.x != start_date.valueOf() / 1000);
+        return data.x != start_date.valueOf() / 1000;
+    });
 
-    // If we have today's data and 30 days worth of data total, we don't have anything
-    // to do. No additional data can be collected. So, just return what we already got.
-    if (obj[Math.floor(yesterday.valueOf()/1000)] && Object.keys(obj).length === 29) {
+    if (up_to_date) {
         return done(existing_data);
     }
 
-    var callback = function(date) {
-        if (Object.keys(obj).length < 30) {
-            _getSongsForDate(date, function(ids) {
-                // Need to get epoch seconds
-                obj[Math.floor(date.valueOf()/1000)] = ids.length;
+    // If we have less than 29 days of data, just regenerate everything.
+    if (existing_data.length < 29) {
+        start_date = end_date.clone().subtract(29, 'days');
+    }
 
-                date.subtract('days', 1);
-                callback(date);
+    _getSongIdsForDateRange(start_date, end_date, function(days) {
+        Object.keys(days).forEach(function(key) {
+            existing_data.push({
+                x: key,
+                y: days[key].length
             });
-        } else {
-            _requestCache = {}
-            done(_toArray(obj));
-        }
-    };
+        });
 
-    callback(yesterday);
+        done(existing_data);
+    });
 }).expiration(29);
-
-// Turns an array like [[date, value], [date, value]]
-// into an object like { date: value, date: value }
-function _toObject(array) {
-    var obj = {}
-
-    for (var i = 0; i < array.length; i++) {
-        obj[array[i][0]] = array[i][1];
-    }
-
-    return obj
-}
-
-// Turns an object into an array like:
-// [[property, value], [property, value]]
-function _toArray(obj) {
-    var array = [];
-
-    var keys = Object.keys(obj)
-    for (var idx = 0; idx < keys.length; idx++) {
-        var key = keys[idx];
-
-        array.push([+key, obj[key]]);
-    }
-
-    return array;
-}
 
 // Helper function to assist with getting songs even
 // if they paginate onto separate pages (which they probably)
 // almost always will.
-function _getSongsForDate(date, url, callback) {
-    // This is for the base case when we only call this function
-    // with a date and a callback function.
+function _getSongIdsForDateRange(start_date, end_date, url, callback) {
+    // If the typeof url is a function, we were called without it,
+    // and we need to push all of our parameters over by one.
     if (typeof url === 'function') {
         callback = url;
         url = 'https://graph.facebook.com/me/music.listens?limit=200&access_token=' + access_token;
     }
 
-    // All the songs we found so far
-    var songs = [];
+    // Create an object that will be date -> [id1, id2, id3]
+    var songs = {};
 
-    // Fire off a request to the url
-    _cachedRequest(url, function(err, response) {
-        // Loop over all of the songs and push them into the array if they
-        // were listened to after the passed in date.
-        var finished = false;
+    // Keep track of the last date we've seen to fill out the above object
+    var last_seen_time = null;
+
+    // Request some songs
+    request.get({ url: url, json: true }, function(err, response) {
+
+        // Make a request to Facebook
         response.body.data.forEach(function(song) {
-            var diff = new Date(song.start_time).getTime() - date.valueOf();
-            if (diff > 0 && diff < 1000 * 60 * 60 * 24) {
-                songs.push(song.data.song.id);
-            } else if (diff < 0) {
-                // Hit the end of today's songs, return false
-                // to break out of the loop.
-                finished = true;
+            var song_time = moment.utc(song.start_time).timeless(4);
+
+            // If the time of this song falls between start/end add it to our object
+            if (song_time.isSame(start_date) || (song_time.isAfter(start_date) && song_time.isBefore(end_date))) {
+                // If the day has changed, create an empty list if it doesn't exist
+                if (last_seen_time == null || !song_time.isSame(last_seen_time)) {
+                    last_seen_time = last_seen_time || song_time.clone().add(1, 'day');
+
+                    while (!song_time.isSame(last_seen_time)) {
+                        if (song_time.isAfter(last_seen_time)) {
+                            last_seen_time = song_time;
+                        } else {
+                            last_seen_time.subtract(1, 'day');
+                        }
+
+                        if (!songs[_tzOffset(-4, last_seen_time)]) {
+                            songs[_tzOffset(-4, last_seen_time)] = [];
+                        }
+                    }
+                }
+
+                // Add this song to the object
+                songs[_tzOffset(-4, song_time)].push(song.id);
             }
         });
 
-        // If we still have songs to load, recursively call this function
-        // with the next page of results.
-        if (!finished) {
-            _getSongsForDate(date, response.body.paging.next, function(paged) {
-                callback(songs.concat(paged));
+        // If we are still within our range, call this method recursively with the next page
+        if (last_seen_time.isAfter(start_date)) {
+            _getSongIdsForDateRange(start_date, end_date, response.body.paging.next, function(paged) {
+                // Merge the keys from paged and songs and return
+                songs = _mergeObjects(songs, paged);
+                callback(songs);
             });
         } else {
-            // Completely done with all of the songs, so
-            // just return the tracks that we already aggregated.
+            // We've received all of the songs from facebook in our date range, return
             callback(songs);
         }
-    })
+    });
+}
+
+function _tzOffset(offset, date) {
+    date = date || moment.utc();
+    return Math.floor(date.clone().add(offset, 'hours').hours(Math.abs(offset)).minutes(0).seconds(0) / 1000);
+}
+
+/*
+ * Takes two objects as parameters and returns
+ * a new object with their properties combined
+ */
+function _mergeObjects(obj1, obj2) {
+    var result = {}
+
+    Object.keys(obj1).forEach(function(key) {
+        result[key] = obj1[key];
+        if (obj1[key]) {
+            obj1[key] = obj1[key].concat(obj2[key]);
+        } else {
+            obj1[key] = obj2[key];
+        }
+    });
+
+    Object.keys(obj2).forEach(function(key) {
+        if (result[key]) {
+            result[key] = result[key].concat(obj2[key]);
+        } else {
+            result[key] = obj2[key];
+        }
+    });
+
+    return result;
 }
 
 function _lookupSongs(ids, callback) {
@@ -211,29 +208,12 @@ function _lookupSongs(ids, callback) {
 
     var pending = ids.length;
     ids.forEach(function(id) {
-        _cachedRequest(url + id, function(err, response) {
+        request.get({ url: url + id, json: true }, function(err, response) {
             songs.push(response.body);
 
             if (--pending === 0) {
                 callback(songs);
             }
         });
-    });
-}
-
-var _requestCache = {}
-function _cachedRequest(url, callback) {
-    if (_requestCache[url]) {
-        return callback.apply(null, _requestCache[url]);
-    }
-
-    request.get({ url: url, json: true }, function(err, response) {
-        if (!_requestCache[url]) {
-            console.log('Requesting ', url);
-
-            _requestCache[url] = [err, response];
-        }
-
-        callback(err, response);
     });
 }

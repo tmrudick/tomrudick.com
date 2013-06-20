@@ -58,7 +58,7 @@ job('walking', '20min', function(done) {
 
         done(miles);
     });
-});
+}).disable();
 
 job('weight', '1day', function(done) {
     var today = moment().format('YYYY-MM-DD');
@@ -83,4 +83,58 @@ job('weight', '1day', function(done) {
 
         done(result);
     });
-});
+}).disable();
+
+job('sleep', '1day', function(done) {
+    var today = moment().format('YYYY-MM-DD');
+    today = moment(today + ' -0400', 'YYYY-MM-DD Z')
+    today = today.format('YYYY-MM-DD');
+
+    request.get('http://api.fitbit.com/1/user/-/sleep/minutesAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
+        var response = JSON.parse(res);
+
+        console.log(response);
+        return done();
+        var result = {
+            today: 0,
+            monthly: []
+        }
+
+        response.weight.forEach(function(weight) {
+            result.monthly.push({
+                x: new Date(weight.date).getTime(),
+                bmi: weight.bmi,
+                y: weight.weight
+            });
+        });
+
+        done(result);
+    });
+}).disable();
+
+job('falling_asleep', '1day', function(done) {
+    var today = moment().format('YYYY-MM-DD');
+    today = moment(today + ' -0400', 'YYYY-MM-DD Z')
+    today = today.format('YYYY-MM-DD');
+
+    request.get('http://api.fitbit.com/1/user/-/sleep/minutesToFallAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
+        var response = JSON.parse(res);
+
+        console.log(response);
+        return done();
+        var result = {
+            today: 0,
+            monthly: []
+        }
+
+        response.weight.forEach(function(weight) {
+            result.monthly.push({
+                x: new Date(weight.date).getTime(),
+                bmi: weight.bmi,
+                y: weight.weight
+            });
+        });
+
+        done(result);
+    });
+}).disable();
