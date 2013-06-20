@@ -46,7 +46,7 @@ var Email = function() {
 var Inbox = function() {
     return {
         init: function(element) {
-            var data = {{json gmail_inbox.counts}};
+            var data = [];
 
             var graph = new Rickshaw.Graph( {
                 element: document.getElementById(element),
