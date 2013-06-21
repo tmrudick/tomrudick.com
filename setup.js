@@ -72,5 +72,25 @@ module.exports = function(Handlebars) {
             JSON.stringify(data, null, 2)
         );
     });
+
+    Handlebars.registerHelper('music_api', function(monthly, daily) {
+        var result = [];
+
+        monthly.forEach(function(value) {
+            result.push({
+                timestamp: value.x,
+                songs: value.y
+            });
+        })
+
+        result.push({
+            timestamp: daily.timestamp,
+            songs: daily.total
+        });
+
+        return new Handlebars.SafeString(
+            JSON.stringify(result, null, 2)
+        );
+    });
 }
 
