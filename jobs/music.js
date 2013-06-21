@@ -5,6 +5,7 @@ var access_token = require('../config.json').tokens.facebook.access_token;
 
 process.on('uncaughtException', function(err) {
     console.log('UNCAUGHT ERROR: ', err);
+    console.log(err.stack);
 });
 
 moment.fn.timeless = function(offset) {
