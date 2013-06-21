@@ -3,6 +3,10 @@ var request = require('request');
 var moment = require('moment');
 var access_token = require('../config.json').tokens.facebook.access_token;
 
+process.on('uncaughtException', function(err) {
+    console.log('UNCAUGHT ERROR: ', err);
+});
+
 moment.fn.timeless = function(offset) {
     offset = offset || 0;
     return this.clone().hours(offset).minutes(0).seconds(0).milliseconds(0);
@@ -25,7 +29,7 @@ job('music_daily', '10 min', function(done, previous) {
         var today = _tzOffset(-4);
 
         // Return the length of how many ids were returned
-        done({ timestamp: today, total: ids[today].length });
+        done({ timestamp: today, total: ids[today] ? ids[today].length : 0 });
     });
 });
 
@@ -156,7 +160,7 @@ function _getSongIdsForDateRange(start_date, end_date, url, callback) {
         });
 
         // If we are still within our range, call this method recursively with the next page
-        if (last_seen_time.isAfter(start_date)) {
+        if (last_seen_time && last_seen_time.isAfter(start_date)) {
             _getSongIdsForDateRange(start_date, end_date, response.body.paging.next, function(paged) {
                 // Merge the keys from paged and songs and return
                 songs = _mergeObjects(songs, paged);
