@@ -64,12 +64,19 @@ module.exports = function(Handlebars) {
     });
 
     Handlebars.registerHelper('checkins_api', function(data) {
-        data.forEach(function(value) {
-            delete value.friendly_timestamp;
+        var checkins = [];
+
+        data.forEach(function(checkin) {
+            results.push({
+                name: checkin.name,
+                location: checkin.location,
+                timestamp: checkin.timestamp,
+                url: checkin.url
+            });
         })
 
         return new Handlebars.SafeString(
-            JSON.stringify(data, null, 2)
+            JSON.stringify(checkins, null, 2)
         );
     });
 
