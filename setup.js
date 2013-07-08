@@ -67,7 +67,7 @@ module.exports = function(Handlebars) {
         var checkins = [];
 
         data.forEach(function(checkin) {
-            results.push({
+            checkins.push({
                 name: checkin.name,
                 location: checkin.location,
                 timestamp: checkin.timestamp,
