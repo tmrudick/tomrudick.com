@@ -34,8 +34,7 @@ job('programming_age', '1 day', function(done) {
  * Runs often and gets data for the last 30 days.
  **/
 job('walking', '20min', function(done) {
-    var today = moment().format('YYYY-MM-DD');
-    today = moment(today + ' -0400', 'YYYY-MM-DD Z')
+    var today = moment.utc().subtract(4, 'hours');
     today = today.format('YYYY-MM-DD');
 
     request.get('http://api.fitbit.com/1/user/-/activities/distance/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
@@ -61,8 +60,7 @@ job('walking', '20min', function(done) {
 });
 
 job('weight', '1day', function(done) {
-    var today = moment().format('YYYY-MM-DD');
-    today = moment(today + ' -0400', 'YYYY-MM-DD Z')
+    var today = moment.utc().subtract(4, 'hours');
     today = today.format('YYYY-MM-DD');
 
     request.get('http://api.fitbit.com/1/user/-/body/log/weight/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
@@ -86,8 +84,7 @@ job('weight', '1day', function(done) {
 }).disable();
 
 job('sleep', '1day', function(done) {
-    var today = moment().format('YYYY-MM-DD');
-    today = moment(today + ' -0400', 'YYYY-MM-DD Z')
+    var today = moment.utc().subtract(4, 'hours');
     today = today.format('YYYY-MM-DD');
 
     request.get('http://api.fitbit.com/1/user/-/sleep/minutesAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
@@ -113,8 +110,7 @@ job('sleep', '1day', function(done) {
 }).disable();
 
 job('falling_asleep', '1day', function(done) {
-    var today = moment().format('YYYY-MM-DD');
-    today = moment(today + ' -0400', 'YYYY-MM-DD Z')
+    var today = moment.utc().subtract(4, 'hours');
     today = today.format('YYYY-MM-DD');
 
     request.get('http://api.fitbit.com/1/user/-/sleep/minutesToFallAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
