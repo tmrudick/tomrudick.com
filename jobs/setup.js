@@ -1,9 +1,12 @@
-// Setup some extra handle bars templates to use for api.tomrudick.com
+// Run once jobs to setup other jobs
 
-module.exports = function(Handlebars) {
+job(function(done) {
+    var Handlebars = require('tonic-hbs').Handlebars;
 
     Handlebars.registerHelper('email_api', function(data) {
         var result = [];
+
+        data = data || { received: [], sent: [] };
 
         for (var i = 0; i < data.received.length; i++) {
             result.push({
@@ -14,12 +17,14 @@ module.exports = function(Handlebars) {
         }
 
         return new Handlebars.SafeString(
-            JSON.stringify(result, null, 2)
+            JSON.stringify(result, null, 2) || ''
         );
     });
 
     Handlebars.registerHelper('inbox_api', function(data) {
         var result = [];
+
+        data = data || [];
 
         for (var i = 0; i < data.counts.length; i++) {
             result.push({
@@ -29,12 +34,14 @@ module.exports = function(Handlebars) {
         }
 
         return new Handlebars.SafeString(
-            JSON.stringify(result, null, 2)
+            JSON.stringify(result, null, 2) || ''
         );
     });
 
     Handlebars.registerHelper('distance_api', function(data) {
         var result = [];
+
+        data = data || [];
 
         data.forEach(function(value) {
             result.push({
@@ -44,12 +51,14 @@ module.exports = function(Handlebars) {
         });
 
         return new Handlebars.SafeString(
-            JSON.stringify(result, null, 2)
+            JSON.stringify(result, null, 2) || ''
         );
     });
 
     Handlebars.registerHelper('weight_api', function(data) {
         var result = [];
+
+        data = data || [];
 
         data.monthly.forEach(function(value) {
             result.push({
@@ -59,12 +68,14 @@ module.exports = function(Handlebars) {
         });
 
         return new Handlebars.SafeString(
-            JSON.stringify(result, null, 2)
+            JSON.stringify(result, null, 2) || ''
         );
     });
 
     Handlebars.registerHelper('checkins_api', function(data) {
         var checkins = [];
+
+        data = data || [];
 
         data.forEach(function(checkin) {
             checkins.push({
@@ -76,12 +87,15 @@ module.exports = function(Handlebars) {
         })
 
         return new Handlebars.SafeString(
-            JSON.stringify(checkins, null, 2)
+            JSON.stringify(checkins, null, 2) || ''
         );
     });
 
     Handlebars.registerHelper('music_api', function(monthly, daily) {
         var result = [];
+
+        monthly = monthly || [];
+        daily = daily || {};
 
         monthly.forEach(function(value) {
             result.push({
@@ -96,8 +110,24 @@ module.exports = function(Handlebars) {
         });
 
         return new Handlebars.SafeString(
-            JSON.stringify(result, null, 2)
+            JSON.stringify(result, null, 2) || ''
         );
     });
-}
 
+    Handlebars.registerHelper('link', function(text, url) {
+        return new Handlebars.SafeString(
+            "<a href='" + url + "'>" + text + "</a>"
+        );
+    });
+
+    Handlebars.registerHelper('json', function(object) {
+        return new Handlebars.SafeString(JSON.stringify(object) || '');
+    });
+
+    Handlebars.registerHelper('pretty_json', function(object) {
+        return new Handlebars.SafeString(JSON.stringify(object, null, 2) || '');
+    });
+
+    done();
+
+}).once().before('hbs');

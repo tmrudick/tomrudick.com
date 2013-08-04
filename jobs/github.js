@@ -6,7 +6,7 @@ var request = require('request');
  * Returns info about my github project activity.
  * This only take into account my public feed.
  */
-job('projects', '1 day', function(done) {
+job('projects', function(done) {
     var url = 'https://api.github.com/users/tmrudick/events/public';
 
     request.get({ url: url, json: true, headers: { 'User-Agent': 'tomrudick.com :: tmrudick@gmail.com' } }, function(err, response) {
@@ -35,7 +35,7 @@ job('projects', '1 day', function(done) {
         // than having really robust error handling code here...
         done();
     });
-});
+}).every('1 day');
 
 // Given an event, return the friendly repo name and url
 function project_from_event(event) {

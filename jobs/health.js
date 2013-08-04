@@ -14,7 +14,7 @@ var request = new OAuth(null, null, fitbit_keys.key, fitbit_keys.secret, '1.0', 
  * Only want this to run once a day since I don't care about
  * intra-day accuracy of this pretty useless metric.
  */
-job('programming_age', '1 day', function(done) {
+job('programming_age', function(done) {
     // Get today without any time portion
     var today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -27,13 +27,13 @@ job('programming_age', '1 day', function(done) {
     var years = Math.floor(diff / 10 / 60 / 60 / 24 / 365) / 100;
 
     done(years);
-});
+}).every('1 day');
 
 /**
  * Return a single object for how much I am walking today.
  * Runs often and gets data for the last 30 days.
  **/
-job('walking', '20min', function(done) {
+job('walking', function(done) {
     var today = moment.utc().subtract(4, 'hours');
     today = today.format('YYYY-MM-DD');
 
@@ -57,9 +57,9 @@ job('walking', '20min', function(done) {
 
         done(miles);
     });
-});
+}).every('20min');
 
-job('weight', '1day', function(done) {
+job('weight', function(done) {
     var today = moment.utc().subtract(4, 'hours');
     today = today.format('YYYY-MM-DD');
 
@@ -81,9 +81,9 @@ job('weight', '1day', function(done) {
 
         done(result);
     });
-}).disable();
+}).every('1 day').disable();
 
-job('sleep', '1day', function(done) {
+job('sleep', function(done) {
     var today = moment.utc().subtract(4, 'hours');
     today = today.format('YYYY-MM-DD');
 
@@ -107,9 +107,9 @@ job('sleep', '1day', function(done) {
 
         done(result);
     });
-}).disable();
+}).every('1 day').disable();
 
-job('falling_asleep', '1day', function(done) {
+job('falling_asleep', function(done) {
     var today = moment.utc().subtract(4, 'hours');
     today = today.format('YYYY-MM-DD');
 
@@ -133,4 +133,4 @@ job('falling_asleep', '1day', function(done) {
 
         done(result);
     });
-}).disable();
+}).every('1 day').disable();

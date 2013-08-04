@@ -1,6 +1,6 @@
 var request = require('request');
 
-job('gmail_traffic', '20m', function(done) {
+job('gmail_traffic', function(done) {
     var url = 'https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=0&range=A1%3AC15&output=csv';
 
     request.get(url, function(err, res) {
@@ -31,9 +31,9 @@ job('gmail_traffic', '20m', function(done) {
             sent: sent
         });
     });
-});
+}).every('20m');
 
-job('gmail_inbox', '30m', function(done) {
+job('gmail_inbox', function(done) {
     var url = "https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=2&range=A1%3AC8&output=csv";
 
     request.get(url, function(err, res) {
@@ -64,4 +64,4 @@ job('gmail_inbox', '30m', function(done) {
 
         done(result);
     });
-});
+}).every('30m');

@@ -3,11 +3,6 @@ var request = require('request');
 var moment = require('moment');
 var access_token = require('../config.json').tokens.facebook.access_token;
 
-process.on('uncaughtException', function(err) {
-    console.log('UNCAUGHT ERROR: ', err);
-    console.log(err.stack);
-});
-
 moment.fn.timeless = function(offset) {
     offset = offset || 0;
     return this.clone().hours(offset).minutes(0).seconds(0).milliseconds(0);
@@ -18,7 +13,7 @@ moment.fn.timeless = function(offset) {
  * Returns the total number of songs that I've listened to today
  * as well as the last 5 songs.
  */
-job('music_daily', '10 min', function(done, previous) {
+job('music_daily', function(done, previous) {
     // Get the current datetime at 4am UTC / 12am EDT
     var start_time = moment.utc().subtract(4, 'hours').timeless(4);
 
@@ -32,12 +27,12 @@ job('music_daily', '10 min', function(done, previous) {
         // Return the length of how many ids were returned
         done({ timestamp: today, total: ids[today] ? ids[today].length : 0 });
     });
-});
+}).every('10min');
 
 /*
  * Gets the last 5 unique album covers for tracks that I have been listening to
  */
-job('album_covers', '1hour', function(done) {
+job('album_covers', function(done) {
     // Request 50 songs
     var url = 'https://graph.facebook.com/me/music.listens?limit=50&access_token=' + access_token;
 
@@ -73,12 +68,12 @@ job('album_covers', '1hour', function(done) {
 
         processNextId();
     });
-}).expiration(0);
+}).every('20min');
 
 /*
  * Gets stream count per day for the past 29 days
  */
-job('music_monthly', '1 day', function(done, existing_data) {
+job('music_monthly', function(done, existing_data) {
     if (!existing_data) {
         existing_data = [];
     }
@@ -110,7 +105,7 @@ job('music_monthly', '1 day', function(done, existing_data) {
 
         done(existing_data);
     });
-}).expiration(29);
+}).every('1 day').take(29);
 
 // Helper function to assist with getting songs even
 // if they paginate onto separate pages (which they probably)

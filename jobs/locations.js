@@ -5,7 +5,7 @@ var request = require('request'),
 /**
  * Checkins within the last rolling 7 days from foursquare.
  */
-job('checkins', '30min', function(done) {
+job('checkins', function(done) {
     // Get a date object from seven days ago (to cover a rolling week)
     var today = new Date();
     today.setDate(today.getDate() - 7);
@@ -51,4 +51,4 @@ job('checkins', '30min', function(done) {
             top_category: top_category
         });
     });
-}).expiration(0); // Always expire the entire array since we get all 7 days each time
+}).every('30min');

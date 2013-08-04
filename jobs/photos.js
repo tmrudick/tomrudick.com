@@ -9,7 +9,7 @@ var request = require('request'),
  * will be scaled to be much smaller.
  * This job will run every day at 9 and 10pm.
  */
-job('eight30six', '0 21,22 * * *', function(done) {
+job('eight30six', function(done) {
     // Build the URL
     var url = 'http://api.tumblr.com/v2/blog/eight30six.tumblr.com/posts?api_key=' + tumblr_api_key + '&limit=7&filter=text';
 
@@ -55,4 +55,4 @@ job('eight30six', '0 21,22 * * *', function(done) {
 
         done(posts);
     });
-});
+}).at('0 21,22 * * *');
