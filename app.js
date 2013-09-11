@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var Tonic = require('../tonic');
+var Tonic = require('tonic');
 
 var tonic = new Tonic({ cache: 'data.json', config: 'config.json' });
 

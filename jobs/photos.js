@@ -10,10 +10,15 @@ var request = require('request'),
  * This job will run every day at 9 and 10pm.
  */
 job('eight30six', function(done) {
+    var self = this;
     // Build the URL
     var url = 'http://api.tumblr.com/v2/blog/eight30six.tumblr.com/posts?api_key=' + tumblr_api_key + '&limit=7&filter=text';
 
     request.get({ url: url, json: true }, function(err, response, body) {
+        if (err || !body.response.posts) {
+            return done(self.data);
+        }
+
         var PORTRAIT_WIDTH = 422;
 
         var posts = {
@@ -55,4 +60,4 @@ job('eight30six', function(done) {
 
         done(posts);
     });
-}).at('0 21,22 * * *');
+}).at('0 1,2 * * *');

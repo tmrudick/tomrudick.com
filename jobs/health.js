@@ -27,17 +27,22 @@ job('programming_age', function(done) {
     var years = Math.floor(diff / 10 / 60 / 60 / 24 / 365) / 100;
 
     done(years);
-}).every('1 day');
+}).at('0 4 * * *');
 
 /**
  * Return a single object for how much I am walking today.
  * Runs often and gets data for the last 30 days.
  **/
 job('walking', function(done) {
-    var today = moment.utc().subtract(4, 'hours');
+    var today = moment.utc().subtract(4, 'hours'),
+        self = this;
+
     today = today.format('YYYY-MM-DD');
 
     request.get('http://api.fitbit.com/1/user/-/activities/distance/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
+        if (err || !res) {
+            return done(self.data);
+        }
         var response = JSON.parse(res);
 
         var miles = {

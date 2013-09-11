@@ -1,7 +1,4 @@
-// Run once jobs to setup other jobs
-
-job(function(done) {
-    var Handlebars = require('tonic-hbs').Handlebars;
+var Handlebars = require('tonic-hbs').Handlebars;
 
     Handlebars.registerHelper('email_api', function(data) {
         var result = [];
@@ -127,7 +124,3 @@ job(function(done) {
     Handlebars.registerHelper('pretty_json', function(object) {
         return new Handlebars.SafeString(JSON.stringify(object, null, 2) || '');
     });
-
-    done();
-
-}).once().before('hbs');

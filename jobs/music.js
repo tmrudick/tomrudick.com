@@ -14,6 +14,7 @@ moment.fn.timeless = function(offset) {
  * as well as the last 5 songs.
  */
 job('music_daily', function(done, previous) {
+    var self = this;
     // Get the current datetime at 4am UTC / 12am EDT
     var start_time = moment.utc().subtract(4, 'hours').timeless(4);
 
@@ -22,6 +23,9 @@ job('music_daily', function(done, previous) {
 
     // Get a list of all of the ids that I listened to today
     _getSongIdsForDateRange(start_time, end_time, function(ids) {
+        if (!ids) {
+            return done(self.data);
+        }
         var today = _tzOffset(-4);
 
         // Return the length of how many ids were returned
@@ -34,6 +38,7 @@ job('music_daily', function(done, previous) {
  */
 job('album_covers', function(done) {
     // Request 50 songs
+    var self = this;
     var url = 'https://graph.facebook.com/me/music.listens?limit=50&access_token=' + access_token;
 
     // Create an object to hold image_url -> song_url mappings
@@ -41,6 +46,9 @@ job('album_covers', function(done) {
 
     // Make the request to facebook
     request.get({ url: url, json: true}, function(err, response) {
+        if (err) {
+            return done(self.data);
+        }
         // Process next id will pop albums off of the response and then
         // check to see if we have a unique image url. If we do, then use it, if not
         // call ourselves again. I very highly doubt that we can't find 5 unique images
@@ -73,39 +81,45 @@ job('album_covers', function(done) {
 /*
  * Gets stream count per day for the past 29 days
  */
-job('music_monthly', function(done, existing_data) {
-    if (!existing_data) {
-        existing_data = [];
+job('music_monthly', function(done) {
+    var self = this;
+
+    if (!this.data) {
+        this.data = [];
     }
 
     var end_date = moment.utc().subtract(4, 'hours').timeless(4);
         start_date = end_date.clone().subtract(1, 'day');
 
     // If we have yesterday, don't do aanything
-    var up_to_date = !existing_data.every(function(data) {
+    var up_to_date = !this.data.every(function(data) {
         return data.x != start_date.valueOf() / 1000;
     });
 
     if (up_to_date) {
-        return done(existing_data);
+        return done(this.data);
     }
 
     // If we have less than 29 days of data, just regenerate everything.
-    if (existing_data.length < 29) {
+    if (this.data.length < 29) {
         start_date = end_date.clone().subtract(29, 'days');
     }
 
     _getSongIdsForDateRange(start_date, end_date, function(days) {
+        if (!days) {
+            return done(self.data);
+        }
+
         Object.keys(days).forEach(function(key) {
-            existing_data.push({
+            self.data.push({
                 x: +key,
                 y: days[key].length
             });
         });
 
-        done(existing_data);
+        done(self.data.slice(-30));
     });
-}).every('1 day').take(29);
+}).at('0 4 * * *');
 
 // Helper function to assist with getting songs even
 // if they paginate onto separate pages (which they probably)
@@ -126,6 +140,9 @@ function _getSongIdsForDateRange(start_date, end_date, url, callback) {
 
     // Request some songs
     request.get({ url: url, json: true }, function(err, response) {
+        if (err || !response.body.data) {
+            return callback(null);
+        }
 
         // Make a request to Facebook
         response.body.data.forEach(function(song) {

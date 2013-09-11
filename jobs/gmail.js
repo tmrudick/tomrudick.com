@@ -1,9 +1,14 @@
 var request = require('request');
 
 job('gmail_traffic', function(done) {
-    var url = 'https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=0&range=A1%3AC15&output=csv';
+    var self = this,
+        url = 'https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=0&range=A1%3AC15&output=csv';
 
     request.get(url, function(err, res) {
+        if (err || !res.body) {
+            return done(self.data);
+        }
+
         var csv = res.body;
         csv = csv.split('\n');
 
@@ -34,9 +39,14 @@ job('gmail_traffic', function(done) {
 }).every('20m');
 
 job('gmail_inbox', function(done) {
-    var url = "https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=2&range=A1%3AC8&output=csv";
+    var self = this,
+        url = "https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=2&range=A1%3AC8&output=csv";
 
     request.get(url, function(err, res) {
+        if (err || !res.body) {
+            return done(self.data)
+        }
+
         var csv = res.body;
         csv = csv.split('\n');
 
@@ -64,4 +74,4 @@ job('gmail_inbox', function(done) {
 
         done(result);
     });
-}).every('30m');
+}).every('30m').disable();

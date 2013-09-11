@@ -7,7 +7,8 @@ var request = require('request'),
  */
 job('checkins', function(done) {
     // Get a date object from seven days ago (to cover a rolling week)
-    var today = new Date();
+    var today = new Date(),
+        self = this;
     today.setDate(today.getDate() - 7);
     var seven_days_ago = Math.floor(today.getTime() / 1000);
 
@@ -17,6 +18,10 @@ job('checkins', function(done) {
     var locations = [];
     var categories = {}
     request({url: url, json: true}, function(err, res, body) {
+        if (err || !body || !body.response || !body.response.checkins || !body.response.checkins.items) {
+            return done(self.data);
+        }
+
         // For each checkin, add it to the locations array
         body.response.checkins.items.forEach(function(location) {
             location.venue.categories.forEach(function(category) {
