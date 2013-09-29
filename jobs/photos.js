@@ -12,7 +12,7 @@ var request = require('request'),
 job('eight30six', function(done) {
     var self = this;
     // Build the URL
-    var url = 'http://api.tumblr.com/v2/blog/eight30six.tumblr.com/posts?api_key=' + tumblr_api_key + '&limit=7&filter=text';
+    var url = 'http://api.tumblr.com/v2/blog/eight30six.tumblr.com/posts?api_key=' + tumblr_api_key + '&limit=7&filter=text&type=photo';
 
     request.get({ url: url, json: true }, function(err, response, body) {
         if (err || !body.response.posts) {
