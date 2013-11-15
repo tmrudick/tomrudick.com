@@ -26,7 +26,7 @@ job('music_daily', function(done, previous) {
         if (!ids) {
             return done(self.data);
         }
-        var today = _tzOffset(-4);
+        var today = _tzOffset(-5);
 
         // Return the length of how many ids were returned
         done({ timestamp: today, total: ids[today] ? ids[today].length : 0 });
@@ -119,7 +119,7 @@ job('music_monthly', function(done) {
 
         done(self.data.slice(-30));
     });
-}).at('0 4 * * *');
+}).at('0 5 * * *');
 
 // Helper function to assist with getting songs even
 // if they paginate onto separate pages (which they probably)
@@ -146,7 +146,7 @@ function _getSongIdsForDateRange(start_date, end_date, url, callback) {
 
         // Make a request to Facebook
         response.body.data.forEach(function(song) {
-            var song_time = moment.utc(song.start_time).timeless(4);
+            var song_time = moment.utc(song.start_time).timeless(5);
 
             // If the time of this song falls between start/end add it to our object
             if (song_time.isSame(start_date) || (song_time.isAfter(start_date) && song_time.isBefore(end_date))) {
@@ -161,14 +161,14 @@ function _getSongIdsForDateRange(start_date, end_date, url, callback) {
                             last_seen_time.subtract(1, 'day');
                         }
 
-                        if (!songs[_tzOffset(-4, last_seen_time)]) {
-                            songs[_tzOffset(-4, last_seen_time)] = [];
+                        if (!songs[_tzOffset(-5, last_seen_time)]) {
+                            songs[_tzOffset(-5, last_seen_time)] = [];
                         }
                     }
                 }
 
                 // Add this song to the object
-                songs[_tzOffset(-4, song_time)].push(song.id);
+                songs[_tzOffset(-5, song_time)].push(song.id);
             }
         });
 
