@@ -15,8 +15,8 @@ moment.fn.timeless = function(offset) {
  */
 job('music_daily', function(done, previous) {
     var self = this;
-    // Get the current datetime at 4am UTC / 12am EDT
-    var start_time = moment.utc().subtract(4, 'hours').timeless(4);
+    // Get the current datetime at 5am UTC / 12am EDT
+    var start_time = moment.utc().subtract(5, 'hours').timeless(5);
 
     // Get the end time 24 hours from the start
     var end_time = start_time.clone().add(24, 'hours');
@@ -88,7 +88,7 @@ job('music_monthly', function(done) {
         this.data = [];
     }
 
-    var end_date = moment.utc().subtract(4, 'hours').timeless(4);
+    var end_date = moment.utc().subtract(5, 'hours').timeless(5);
         start_date = end_date.clone().subtract(1, 'day');
 
     // If we have yesterday, don't do aanything
