@@ -86,7 +86,7 @@ job('weight', function(done) {
 
         done(result);
     });
-}).every('1 day').disable();
+}).every('1 day');
 
 job('sleep', function(done) {
     var today = moment.utc().subtract(5, 'hours');

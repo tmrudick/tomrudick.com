@@ -21,7 +21,7 @@ var Handlebars = require('tonic-hbs').Handlebars;
     Handlebars.registerHelper('inbox_api', function(data) {
         var result = [];
 
-        data = data || [];
+        data = data || { counts: [] };
 
         for (var i = 0; i < data.counts.length; i++) {
             result.push({
@@ -57,10 +57,27 @@ var Handlebars = require('tonic-hbs').Handlebars;
 
         data = data || [];
 
-        data.monthly.forEach(function(value) {
+        data.forEach(function(value) {
             result.push({
                 timestamp: value.x,
                 weight: value.y
+            })
+        });
+
+        return new Handlebars.SafeString(
+            JSON.stringify(result, null, 2) || ''
+        );
+    });
+
+    Handlebars.registerHelper('bmi_api', function(data) {
+        var result = [];
+
+        data = data || [];
+
+        data.forEach(function(value) {
+            result.push({
+                timestamp: value.x,
+                bmi: value.bmi
             })
         });
 

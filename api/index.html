@@ -1,23 +1,23 @@
 <html>
-    <head>
-        <title>api.tomrudick.com</title>
-        <link rel="stylesheet" type="text/css" href="http://tomrudick.com/assets/css/api.css">
-        <link rel="stylesheet" href="https://raw.github.com/isagalaev/highlight.js/master/src/styles/github.css">
-        <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script>
-    </head>
-    <body>
-        <h1>api.tomrudick.com</h1>
+<head>
+  <title>api.tomrudick.com</title>
+  <link rel="stylesheet" type="text/css" href="http://tomrudick.com/assets/css/api.css">
+  <link rel="stylesheet" href="https://raw.github.com/isagalaev/highlight.js/master/src/styles/github.css">
+  <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+  <h1>api.tomrudick.com</h1>
 
-        <p>This is an API for me. It is used to power my <a href="http://tomrudick.com">personal website</a> but I will probably find other interesting ways to use it.</p>
-        <p>All data is aggregated from various external APIs and merged together to provide a single view into my digital life. Most of the data is in real-time or with very slight delays. More endpoints will be added as I can find the time. Additional feeds that I want to add are Github activity, daily step counts, sleep and weight data, time spent commuting per day, and inbox counts.</p>
+  <p>This is an API for me. It is used to power my <a href="http://tomrudick.com">personal website</a> but I will probably find other interesting ways to use it.</p>
+  <p>All data is aggregated from various external APIs and merged together to provide a single view into my digital life. Most of the data is in real-time or with very slight delays. More endpoints will be added as I can find the time. Additional feeds that I want to add are Github activity, daily step counts, sleep data, and time spent commuting per day.</p>
 
-        <h2>Endpoints</h2>
-        <p>All endpoints will return JSON data regardless of any request headers and are completely public.</p>
-        <div class="endpoint">
-            <p class="url"><a href="/v1/music">/v1/music</a></p>
-            <p class="description">The total number of songs that I have listened to each day for the last 30 days.</p>
-            <pre><code>[
+  <h2>Endpoints</h2>
+  <p>All endpoints will return JSON data regardless of any request headers and are completely public.</p>
+  <div class="endpoint">
+    <p class="url"><a href="/v1/music">/v1/music</a></p>
+    <p class="description">The total number of songs that I have listened to each day for the last 30 days.</p>
+    <pre><code>[
   {
     "timestamp": 1369281600,
     "songs": 7
@@ -27,12 +27,12 @@
     "songs": 22
   }
 ]</code></pre>
-        </div>
+</div>
 
-        <div class="endpoint">
-            <p class="url"><a href="/v1/distance">/v1/distance</a></p>
-            <p class="description">Distance (in miles) that I have walked for the last 30 days.</p>
-                <pre><code>[
+<div class="endpoint">
+  <p class="url"><a href="/v1/distance">/v1/distance</a></p>
+  <p class="description">Distance (in miles) that I have walked for the last 30 days.</p>
+  <pre><code>[
   {
     "timestamp": 1368072000,
     "distance": 3.3
@@ -42,12 +42,42 @@
     "distance": 4.14
   }
 ]</code></pre>
-        </div>
+</div>
 
-        <div class="endpoint">
-            <p class="url"><a href="/v1/email/traffic">/v1/email/traffic</a></p>
-            <p class="description">Aggregated count of the number of emails that I have sent and received for the last 14 days.</p>
-                <pre><code>[
+<div class="endpoint">
+  <p class="url"><a href="/v1/weight">/v1/weight</a></p>
+  <p class="description">My weight (in US pounds) every day for the last 30 days.</p>
+  <pre><code>[
+  {
+    "timestamp": 1382745600000,
+    "weight": 152.6
+  },
+  {
+    "timestamp": 1382832000000,
+    "weight": 151.8
+  }
+]</code></pre>
+</div>
+
+<div class="endpoint">
+  <p class="url"><a href="/v1/bmi">/v1/bmi</a></p>
+  <p class="description">My body mass index every day for the last 30 days.</p>
+  <pre><code>[
+  {
+    "timestamp": 1382832000000,
+    "bmi": 22.42
+  },
+  {
+    "timestamp": 1382918400000,
+    "bmi": 22.5
+  }
+]</code></pre>
+</div>
+
+<div class="endpoint">
+  <p class="url"><a href="/v1/email/traffic">/v1/email/traffic</a></p>
+  <p class="description">Aggregated count of the number of emails that I have sent and received for the last 14 days.</p>
+  <pre><code>[
   {
     "timestamp": 1369972800,
     "received": 39,
@@ -59,27 +89,27 @@
     "sent": 4
   }
 ]</code></pre>
-        </div>
+</div>
 
-        <div class="endpoint">
-            <p class="url"><a href="/v1/email/inbox">/v1/email/inbox</a></p>
-            <p class="description">Number of emails in my inbox per day for the last 7 days.</p>
-                <pre><code>[
+<div class="endpoint">
+  <p class="url"><a href="/v1/email/inbox">/v1/email/inbox</a></p>
+  <p class="description">Number of emails (read and unread) in my mailbox for the last 14 days.</p>
+  <pre><code>[
   {
-    "timestamp": 1369972800,
-    "emails": 5
+    "timestamp": 1383019200,
+    "emails": 0
   },
   {
-    "timestamp": 1370059200,
-    "emails": 4
+    "timestamp": 1383105600,
+    "emails": 5
   }
 ]</code></pre>
-        </div>
+</div>
 
-        <div class="endpoint">
-            <p class="url"><a href="/v1/checkins">/v1/checkins</a></p>
-            <p class="description">Checkin and location data for the last 7 days.</p>
-            <pre><code>[
+<div class="endpoint">
+  <p class="url"><a href="/v1/checkins">/v1/checkins</a></p>
+  <p class="description">Checkin and location data for the last 7 days.</p>
+  <pre><code>[
   {
     "name": "Spotify",
     "location": {
@@ -95,7 +125,8 @@
     },
     "timestamp": 1370655923000,
     "url": "https:\/\/foursquare.com\/v\/spotify\/4bc8903115a7ef3bc2507bda"
-  }, {
+  },
+  {
     "name": "Blue Bottle Coffee",
     "location": {
       "address": "450 W 15th St.",
@@ -112,12 +143,12 @@
     "url": "http:\/\/www.bluebottlecoffee.net"
   }
 ]</code></pre>
-        </div>
-    <div class="section">
-        <p>Data is currently aggregated from the following services: Spotify, Facebook, Foursquare, Fitbit, and GMail.</p>
-    </div<
-    <div id="footer">
-        <p><a href="http://tomrudick.com">tomrudick</a> | built with <a href="http://www.tonicjs.org">tonic</a></p>
-    </div>
-    </body>
+</div>
+<div class="section">
+  <p>Data is currently aggregated from the following services: Spotify, Facebook, Foursquare, Fitbit, and GMail.</p>
+  </div<
+  <div id="footer">
+    <p><a href="http://tomrudick.com">tomrudick</a> | built with <a href="http://www.tonicjs.org">tonic</a></p>
+  </div>
+</body>
 <html>

@@ -40,7 +40,7 @@ job('gmail_traffic', function(done) {
 
 job('gmail_inbox', function(done) {
     var self = this,
-        url = "https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=2&range=A1%3AC8&output=csv";
+        url = "https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=2&range=A1%3AD31&output=csv";
 
     request.get(url, function(err, res) {
         if (err || !res.body) {
@@ -61,7 +61,7 @@ job('gmail_inbox', function(done) {
             var timestamp = +values[0];
             result.counts.unshift({
                 x: timestamp,
-                y: +values[1]
+                y: +values[3]
             });
 
             if (index === 1) {
@@ -74,4 +74,4 @@ job('gmail_inbox', function(done) {
 
         done(result);
     });
-}).every('30m').disable();
+}).every('30m');
