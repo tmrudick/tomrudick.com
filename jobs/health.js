@@ -17,7 +17,7 @@ job('walking', function(done) {
 
     today = today.format('YYYY-MM-DD');
 
-    request.get('http://api.fitbit.com/1/user/-/activities/distance/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
+    request.get('https://api.fitbit.com/1/user/-/activities/distance/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
         if (err || !res) {
             return done(self.data);
         }
@@ -46,7 +46,7 @@ job('weight', function(done) {
     var today = moment.utc().subtract(5, 'hours');
     today = today.format('YYYY-MM-DD');
 
-    request.get('http://api.fitbit.com/1/user/-/body/log/weight/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
+    request.get('https://api.fitbit.com/1/user/-/body/log/weight/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
         var response = JSON.parse(res);
 
         var result = {
@@ -70,10 +70,9 @@ job('sleep', function(done) {
     var today = moment.utc().subtract(5, 'hours');
     today = today.format('YYYY-MM-DD');
 
-    request.get('http://api.fitbit.com/1/user/-/sleep/minutesAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
+    request.get('https://api.fitbit.com/1/user/-/sleep/minutesAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
         var response = JSON.parse(res);
 
-        console.log(response);
         return done();
         var result = {
             today: 0,
@@ -96,10 +95,9 @@ job('falling_asleep', function(done) {
     var today = moment.utc().subtract(5, 'hours');
     today = today.format('YYYY-MM-DD');
 
-    request.get('http://api.fitbit.com/1/user/-/sleep/minutesToFallAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
+    request.get('https://api.fitbit.com/1/user/-/sleep/minutesToFallAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
         var response = JSON.parse(res);
 
-        console.log(response);
         return done();
         var result = {
             today: 0,
