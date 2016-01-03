@@ -7,7 +7,7 @@ var tonic = require('tonic'),
   serveStatic = require('serve-static');
 
 // Create and start tonic app
-var app = tonic({ cache: 'data.json', config: 'config.json' });
+var app = tonic({ cache: process.env.DATA_PATH, config: process.env.CONFIG_PATH });
 app.use(hbs);
 app.jobs('jobs');
 app.start();
