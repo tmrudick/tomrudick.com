@@ -68,7 +68,9 @@ job('album_covers', function(done) {
                 done(covers);
             } else {
                 _lookupSongs([response.body.data.shift().data.song.id], function(songs) {
-                    cover_urls[songs[0].image[0].url] = songs[0].url;
+                    if (songs && songs[0] && songs[0].image) {
+                        cover_urls[songs[0].image[0].url] = songs[0].url;
+                    }
                     processNextId();
                 });
             }
@@ -219,12 +221,13 @@ function _mergeObjects(obj1, obj2) {
 }
 
 function _lookupSongs(ids, callback) {
-    var url = 'http://graph.facebook.com/';
+    var url = 'https://graph.facebook.com/';
     var songs = [];
 
     var pending = ids.length;
     ids.forEach(function(id) {
-        request.get({ url: url + id, json: true }, function(err, response) {
+        var full_url = url + id + '?access_token=' + access_token;
+        request.get({ url: full_url, json: true }, function(err, response) {
             songs.push(response.body);
 
             if (--pending === 0) {
