@@ -1,5 +1,5 @@
 var moment = require('moment'),
-    fitbit_keys = require('../config.json').tokens.fitbit,
+    fitbit_keys = config().tokens.fitbit,
     OAuth = require('oauth').OAuth;
 
 // Create shared oauth request object for fitbit

@@ -1,6 +1,6 @@
 var request = require('request'),
     moment = require('moment'),
-    tumblr_api_key = require('../config.json').tokens.tumblr.api_key;
+    tumblr_api_key = config().tokens.tumblr.api_key;
 
 /*
  * Gets my last 7 8:36pm photos from Tumblr.

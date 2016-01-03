@@ -1,7 +1,7 @@
 // Anything and everything to do with music related stats
 var request = require('request');
 var moment = require('moment');
-var access_token = require('../config.json').tokens.facebook.access_token;
+var access_token = config().tokens.facebook.access_token;
 
 moment.fn.timeless = function(offset) {
     offset = offset || 0;

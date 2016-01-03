@@ -1,6 +1,6 @@
 var request = require('request'),
     moment = require('moment'),
-    foursquare_auth_token = require('../config.json').tokens.foursquare.auth_token;
+    foursquare_auth_token = config().tokens.foursquare.auth_token;
 
 /**
  * Checkins within the last rolling 7 days from foursquare.
