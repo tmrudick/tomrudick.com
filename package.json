@@ -8,6 +8,8 @@
     "moment": "~2.0.0",
     "oauth": "~0.9.10",
     "request": "~2.21.0",
-    "serve-static": "^1.10.0"
+    "serve-static": "^1.10.0",
+    "tonic": "0.0.6",
+    "tonic-hbs": "0.0.2"
   }
 }

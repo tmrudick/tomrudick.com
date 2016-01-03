@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-var tonic = require('../tonic'),
-  hbs = require('../tonic-hbs'),
+var tonic = require('tonic'),
+  hbs = require('tonic-hbs'),
   http = require('http'),
   finalhandler = require('finalhandler'),
   serveStatic = require('serve-static');
@@ -18,7 +18,6 @@ var api = serveStatic('api'),
 
 var server = http.createServer(function(req, res){
   var done = finalhandler(req, res)
-  console.log(req.headers.host);
   if (req.headers.host && req.headers.host.indexOf('api.tomrudick.com') == 0) {
     api(req, res, done);
   } else {
