@@ -1,9 +1,30 @@
 #!/usr/bin/env node
 
-var Tonic = require('tonic');
+var tonic = require('../tonic'),
+  hbs = require('../tonic-hbs'),
+  http = require('http'),
+  finalhandler = require('finalhandler'),
+  serveStatic = require('serve-static');
 
-var tonic = new Tonic({ cache: 'data.json', config: 'config.json' });
+// Create and start tonic app
+var app = tonic({ cache: 'data.json', config: 'config.json' });
+app.use(hbs);
+app.jobs('jobs');
+app.start();
 
-tonic.module('tonic-hbs').jobs('jobs');
+// Create and start web server for api and public domains
+var api = serveStatic('api'),
+  serve = serveStatic('public');
 
-tonic.start();
+var server = http.createServer(function(req, res){
+  var done = finalhandler(req, res)
+  console.log(req.headers.host);
+  if (req.headers.host && req.headers.host.indexOf('api.tomrudick.com') == 0) {
+    api(req, res, done);
+  } else {
+    serve(req, res, done);
+  }
+});
+
+// Listen
+server.listen(8080);

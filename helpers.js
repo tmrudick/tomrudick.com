@@ -1,5 +1,4 @@
-var Handlebars = require('tonic-hbs').Handlebars;
-
+module.exports = function(Handlebars) {
     Handlebars.registerHelper('email_api', function(data) {
         var result = [];
 
@@ -141,3 +140,4 @@ var Handlebars = require('tonic-hbs').Handlebars;
     Handlebars.registerHelper('pretty_json', function(object) {
         return new Handlebars.SafeString(JSON.stringify(object, null, 2) || '');
     });
+};
