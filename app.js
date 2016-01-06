@@ -7,7 +7,10 @@ var tonic = require('tonic'),
   serveStatic = require('serve-static');
 
 // Create and start tonic app
-var app = tonic({ cache: process.env.DATA_PATH, config: process.env.CONFIG_PATH });
+var app = tonic({ 
+  cache: process.env.DATA_PATH || 'data.json', 
+  config: process.env.CONFIG_PATH || 'config.json'
+});
 app.use(hbs);
 app.jobs('jobs');
 app.start();
@@ -19,11 +22,24 @@ var api = serveStatic('api'),
 var server = http.createServer(function(req, res){
   var done = finalhandler(req, res)
   if (req.headers.host && req.headers.host.indexOf('api.tomrudick.com') == 0) {
+    req.url = rewriteApiUrl(req.url);
     api(req, res, done);
   } else {
     serve(req, res, done);
   }
 });
+
+// Rewrite /v1/inbox/traffic to /inbox_traffic.json
+// so that it can be properly served from the api folder.
+function rewriteApiUrl(url) {
+  if (url.indexOf('/v1') === 0) {
+    url = url.substring(4);
+    url = url.replace('/', '_');
+    url = '/' + url + '.json';
+  }
+
+  return url;
+}
 
 // Listen
 server.listen(8080);
