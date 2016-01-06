@@ -24,6 +24,8 @@ var server = http.createServer(function(req, res){
   if (req.headers.host && req.headers.host.indexOf('api.tomrudick.com') == 0) {
     req.url = rewriteApiUrl(req.url);
     api(req, res, done);
+  } else if (req.url === '/status') {
+    res.end('OK');
   } else {
     serve(req, res, done);
   }
