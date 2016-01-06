@@ -34,7 +34,9 @@ var server = http.createServer(function(req, res){
 // Rewrite /v1/inbox/traffic to /inbox_traffic.json
 // so that it can be properly served from the api folder.
 function rewriteApiUrl(url) {
-  if (url.indexOf('/v1') === 0) {
+  if (url === '/v1') {
+    return '/index.json';
+  } else if (url.indexOf('/v1') === 0) {
     url = url.substring(4);
     url = url.replace('/', '_');
     url = '/' + url + '.json';
