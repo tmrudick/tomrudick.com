@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.1",
   "description": "Quantified Self style website for Tom Rudick. Hosted at http://www.tomrudick.com.",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "finalhandler": "^0.4.1",
     "moment": "~2.0.0",
