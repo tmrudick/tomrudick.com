@@ -1,7 +1,4 @@
-FROM alpine
-
-# Install nodejs
-RUN apk add --update nodejs
+FROM iojs:onbuild
 
 # Add source code and set working directory
 ADD . /app
