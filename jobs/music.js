@@ -39,7 +39,7 @@ job('music_daily', function(done, previous) {
 job('album_covers', function(done) {
     // Request 50 songs
     var self = this;
-    var url = 'https://graph.facebook.com/me/music.listens?limit=50&access_token=' + access_token;
+    var url = 'https://graph.facebook.com/v2.6/me/music.listens?limit=50&access_token=' + access_token;
 
     // Create an object to hold image_url -> song_url mappings
     var cover_urls = {};
@@ -54,6 +54,9 @@ job('album_covers', function(done) {
         // call ourselves again. I very highly doubt that we can't find 5 unique images
         // in 50 tracks.
         var processNextId = function() {
+            if (!response.body.data) {
+                return done(self.data);
+            }
             if (Object.keys(cover_urls).length === 5 || response.body.data.length === 0) {
                 var keys = Object.keys(cover_urls);
                 var covers = [];
@@ -131,7 +134,7 @@ function _getSongIdsForDateRange(start_date, end_date, url, callback) {
     // and we need to push all of our parameters over by one.
     if (typeof url === 'function') {
         callback = url;
-        url = 'https://graph.facebook.com/me/music.listens?limit=200&access_token=' + access_token;
+        url = 'https://graph.facebook.com/v2.6/me/music.listens?limit=200&access_token=' + access_token;
     }
 
     // Create an object that will be date -> [id1, id2, id3]
