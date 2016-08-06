@@ -1,9 +1,6 @@
 var moment = require('moment'),
     fitbit_keys = config().tokens.fitbit,
-    OAuth = require('oauth').OAuth;
-
-// Create shared oauth request object for fitbit
-var request = new OAuth(null, null, fitbit_keys.key, fitbit_keys.secret, '1.0', null, 'HMAC-SHA1', null, { 'Accept-Language': 'en_US' });
+    request = require('request');
 
 // Gets health/bio related data about me
 
@@ -17,11 +14,20 @@ job('walking', function(done) {
 
     today = today.format('YYYY-MM-DD');
 
-    request.get('https://api.fitbit.com/1/user/-/activities/distance/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
+    var options = {
+        url: 'https://api.fitbit.com/1/user/-/activities/distance/date/' + today + '/1m.json',
+        headers: {
+            'Authorization': 'Bearer ' + fitbit_keys.access_token
+        },
+        json: true
+    }
+
+    request.get(options, function(err, res) {
         if (err || !res) {
             return done(self.data);
         }
-        var response = JSON.parse(res);
+
+        response = res.body;
 
         var miles = {
             today: 0,
@@ -46,8 +52,16 @@ job('weight', function(done) {
     var today = moment.utc().subtract(5, 'hours');
     today = today.format('YYYY-MM-DD');
 
-    request.get('https://api.fitbit.com/1/user/-/body/log/weight/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
-        var response = JSON.parse(res);
+    var options = {
+        url: 'https://api.fitbit.com/1/user/-/body/log/weight/date/' + today + '/1m.json',
+        headers: {
+            'Authorization': 'Bearer ' + fitbit_keys.access_token
+        },
+        json: true
+    }
+
+    request.get(options, function(err, res) {
+        response = res.body;
 
         var result = {
             today: 0,
@@ -70,9 +84,14 @@ job('sleep', function(done) {
     var today = moment.utc().subtract(5, 'hours');
     today = today.format('YYYY-MM-DD');
 
-    request.get('https://api.fitbit.com/1/user/-/sleep/minutesAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
-        var response = JSON.parse(res);
+    var options = {
+        url: 'https://api.fitbit.com/1/user/-/sleep/minutesAsleep/date/' + today + '/1m.json',
+        headers: {
+            'Authorization': 'Bearer ' + fitbit_keys.access_token
+        }
+    }
 
+    request.get(options, function(err, res) {
         return done();
         var result = {
             today: 0,
@@ -95,9 +114,14 @@ job('falling_asleep', function(done) {
     var today = moment.utc().subtract(5, 'hours');
     today = today.format('YYYY-MM-DD');
 
-    request.get('https://api.fitbit.com/1/user/-/sleep/minutesToFallAsleep/date/' + today + '/1m.json', fitbit_keys.token, fitbit_keys.token_secret, function(err, res) {
-        var response = JSON.parse(res);
+    var options = {
+        url: 'https://api.fitbit.com/1/user/-/sleep/minutesToFallAsleep/date/' + today + '/1m.json',
+        headers: {
+            'Authorization': 'Bearer ' + fitbit_keys.access_token
+        }
+    }
 
+    request.get(options, function(err, res) {
         return done();
         var result = {
             today: 0,
