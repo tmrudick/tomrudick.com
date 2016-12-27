@@ -4,7 +4,20 @@ var tonic = require('tonic'),
   hbs = require('tonic-hbs'),
   http = require('http'),
   finalhandler = require('finalhandler'),
-  serveStatic = require('serve-static');
+  serveStatic = require('serve-static'),
+  google = require('googleapis');
+
+// Load the config early to get the key info
+var config = require(process.env.CONFIG_PATH || './config.json');
+
+// Set up GoogleApi auth
+var google_keys = config.tokens.google;
+var oauth2Client = new google.auth.OAuth2(
+  google_keys.client_id,
+  google_keys.client_secret,
+  google_keys.redirect_url);
+oauth2Client.setCredentials(google_keys.tokens);
+google.options({ auth: oauth2Client });
 
 // Create and start tonic app
 var app = tonic({ 
@@ -16,34 +29,16 @@ app.jobs('jobs');
 app.start();
 
 // Create and start web server for api and public domains
-var api = serveStatic('api'),
-  serve = serveStatic('public');
+var serve = serveStatic('public');
 
 var server = http.createServer(function(req, res){
   var done = finalhandler(req, res)
-  if (req.headers.host && req.headers.host.indexOf('api.tomrudick.com') == 0) {
-    req.url = rewriteApiUrl(req.url);
-    api(req, res, done);
-  } else if (req.url === '/status') {
+  if (req.url === '/status') {
     res.end('OK');
   } else {
     serve(req, res, done);
   }
 });
-
-// Rewrite /v1/inbox/traffic to /inbox_traffic.json
-// so that it can be properly served from the api folder.
-function rewriteApiUrl(url) {
-  if (url === '/v1') {
-    return '/index.json';
-  } else if (url.indexOf('/v1') === 0) {
-    url = url.substring(4);
-    url = url.replace('/', '_');
-    url = '/' + url + '.json';
-  }
-
-  return url;
-}
 
 // Listen
 server.listen(8080);

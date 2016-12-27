@@ -1,123 +1,89 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,300italic);
+/* Default and Reset Stylings */
 
 * { padding: 0; margin: 0;}
 h1,h2,h3 { font-weight: normal; }
+
 a, a:link, a:visited {
     color: #5a5a5a;
     text-decoration: none;
 }
+
 a:hover {
     text-decoration: underline;
 }
+
+/* Body */
+
 body {
     color: #5a5a5a;
-    font-family: "Lato", "Helvetica Neue", Helvetica, sans-serif;;
-    margin: 25px auto;
-    font-size: 18px;
-    width: 800px;
 }
 
-p {
-    margin: 10px 0;
+h1 {
+  margin: 0.5em 0 0 0;
 }
 
-.section {
-    margin-top: 25px;
+h2 {
+  margin: 0;
+  font-size: 130%;
 }
 
-.horizontal-list li {
-    display: inline-block;
-    text-align: top;
+h3 {
+  margin: 0;
 }
 
-.song img {
-    margin-right: 5px;
-    height: 148px;
-    width: 148px;
-}
-#albums .song:last-child img {
-    margin-right: 0;
+h4 {
+  font-size: 100%;
+  font-weight: bold;
+  margin: 0.25em 0;
 }
 
-#albums {
-    margin-top: 10px;
+#heading {
+  border-bottom: #5a5a5a 1px solid;
+  margin-bottom: 0.5em;
 }
 
-#map {
-    height: 300px;
+#vitals h3 {
+  margin: 0;
 }
 
-.cropped {
-    overflow: hidden;
-    display: inline-block;
+#vitals ul, #music ul, #eight36 ul {
+  list-style: none;
+  margin: 0;
 }
 
-.landscape-large {
-    vertical-align: top;
-    height: 281px;
-    width: 281px;
-}
-.landscape-large img {
-    margin-left: -109px;
+.material-icons {
+  vertical-align: middle;
 }
 
-.landscape-small {
-    height: 140px;
-    width: 140px;
-}
-
-.landscape-small img {
-    margin-top: -70px;
-    margin-left: -180px;
-}
-
-.portrait-large {
-    vertical-align: top;
-    height: 281px;
-    width: 281px;
-
-}
-.portrait-large img {
-    margin-top: -235px;
-    margin-left: -70px;
-}
-
-.portrait-small {
-    height: 140px;
-    width: 140px;
-}
-
-.portrait-small img {
-    margin-top: -305px;
-    margin-left: -141px;
-}
-
-.caption {
-    display: inline-block;
-}
-.grid-box {
-    width: 480px;
-    display: inline-block;
-}
-.cropped {
-    position: relative;
-}
-.cropped p {
-    display: none;
-}
-.cropped:hover p {
-    display: block;
-    padding: 5px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background: #fff;
-    opacity: 0.7;
+.crop {
     width: 100%;
-    margin-bottom: 0px;
+    height: 100%;
+    object-fit: none;
 }
-.tonic {
+
+#eight36 {
+  margin-top: 1em;
+}
+
+#travel #checkins {
+    margin-top: 1em;
+    margin-bottom: 0em;
+}
+
+#vitals li {
     text-align: center;
-    margin: 25px 0;
-    font-size: 75%;
+}
+
+@media (min-width: 550px) {
+    #travel #checkins {
+        margin-top: 0;
+    }
+    #vitals li {
+        text-align: left;
+    }
+    .crop {
+        object-fit: cover;
+        width: 128px;
+        height: 128px;
+    }
 }

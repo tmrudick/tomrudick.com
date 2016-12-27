@@ -1,77 +1,36 @@
-var request = require('request');
+var request = require('request'),
+    rp = require('request-promise');
 
-job('gmail_traffic', function(done) {
-    var self = this,
-        url = 'https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=0&range=A1%3AC15&output=csv';
+job('sent_emails', function(done) {
+    var self = this;
+    var url = 'https://docs.google.com/spreadsheets/d/13eTU8XpF_vxHtH-KeozCYdpOmOH6Diwol5auxma231M/pub?gid=1317008117&single=true&output=csv';
 
-    request.get(url, function(err, res) {
-        if (err || !res.body) {
-            return done(self.data);
-        }
+    rp(url)
+    .then(function(response) {
+        csv = response.split('\n').splice(1);
 
-        var csv = res.body;
-        csv = csv.split('\n');
-
-        var received = [];
-        var sent = [];
-
-        csv.forEach(function(row, index) {
-            if (index === 0) { return; }
-
-            var values = row.split(',');
-            var timestamp = +values[0];
-            received.unshift({
-                x: timestamp,
-                y: +values[1]
-            });
-
-            sent.unshift({
-                x: timestamp,
-                y: +values[2]
-            });
-        });
-
-        done({
-            received: received,
-            sent: sent
-        });
-    });
-}).every('20m');
-
-job('gmail_inbox', function(done) {
-    var self = this,
-        url = "https://docs.google.com/spreadsheet/pub?key=0AuxhddH4pqmRdDR2WUhJMGluY0J3bW9zWHNOR1VWLXc&single=true&gid=2&range=A1%3AD31&output=csv";
-
-    request.get(url, function(err, res) {
-        if (err || !res.body) {
-            return done(self.data)
-        }
-
-        var csv = res.body;
-        csv = csv.split('\n');
-
-        var result = {
-            counts: []
+        var data = {
+            today: 0,
+            week: 0,
+            year: 0
         };
 
         csv.forEach(function(row, index) {
-            if (index === 0) { return; }
+            values = row.split(',').splice(2);
 
-            var values = row.split(',');
-            var timestamp = +values[0];
-            result.counts.unshift({
-                x: timestamp,
-                y: +values[3]
-            });
-
-            if (index === 1) {
-                result.today = {
-                    count: +values[1],
-                    time: values[2]
-                };
+            if (index == 0) {
+                data.today = +values;
+            } else if (index == 1) {
+                data.week = +values;
+            } else if (index == 2) {
+                data.year = +values;
             }
         });
 
-        done(result);
+        return data;
+    })
+    .then(done, function(err) {
+        console.log('Could not fetch gmail stats: ' + err);
+        done(self.data);
     });
-}).every('30m');
+}).every('20m');

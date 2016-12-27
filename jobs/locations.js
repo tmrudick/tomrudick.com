@@ -1,5 +1,6 @@
 var request = require('request'),
     moment = require('moment'),
+    _ = require('lodash'),
     foursquare_auth_token = config().tokens.foursquare.auth_token;
 
 /**
@@ -16,7 +17,10 @@ job('checkins', function(done) {
     var url = 'https://api.foursquare.com/v2/users/self/checkins?&v=20130204&oauth_token=' + foursquare_auth_token + '&afterTimestamp=' + seven_days_ago;
 
     var locations = [];
-    var categories = {}
+    var categories = {
+        names: [],
+        lookup: {}
+    }
     request({url: url, json: true}, function(err, res, body) {
         if (err || !body || !body.response || !body.response.checkins || !body.response.checkins.items) {
             return done(self.data);
@@ -25,11 +29,8 @@ job('checkins', function(done) {
         // For each checkin, add it to the locations array
         body.response.checkins.items.forEach(function(location) {
             location.venue.categories.forEach(function(category) {
-                if (!categories[category.pluralName]) {
-                    categories[category.pluralName] = 0
-                }
-
-                categories[category.pluralName]++
+                categories.names.push(category.name);
+                categories.lookup[category.name] = category;
             });
 
             locations.push({
@@ -41,19 +42,19 @@ job('checkins', function(done) {
             })
         });
 
-        var c_keys = Object.keys(categories);
-        var top_category = null
-        var highest = 0;
-        c_keys.forEach(function(key) {
-            if (categories[key] > highest) {
-                highest = categories[key];
-                top_category = key.toLowerCase();
-            }
-        });
+        flatCategories = _.chain(categories.names)
+        .countBy()
+        .map(function(count, category) {
+            category = categories.lookup[category];
+            return {
+                name: count == 1 ? category.name : category.pluralName,
+                count: count
+            };
+        }).sortBy('count').reverse().value().slice(0, 8);
 
         done({
             recent: locations,
-            top_category: top_category
+            categories: flatCategories
         });
     });
 }).every('30min');

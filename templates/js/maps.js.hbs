@@ -18,7 +18,15 @@ var Maps = function() {
         center: new google.maps.LatLng(40.7111, -73.9565),
         zoom: 8,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        scrollwheel: false
+        scrollwheel: false,
+        styles: [
+                  {
+                    "elementType": "geometry",
+                    "stylers": [
+                      { "saturation": -100 }
+                    ]
+                  }
+                ]
     };
 
     return {
