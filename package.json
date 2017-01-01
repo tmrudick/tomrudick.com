@@ -10,6 +10,7 @@
     "bluebird": "^3.4.7",
     "finalhandler": "^0.4.1",
     "googleapis": "^16.0.0",
+    "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
