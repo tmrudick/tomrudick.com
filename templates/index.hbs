@@ -1,101 +1,146 @@
-<!DOCTYPE html>
+<!DOCTYPE html!>
 <html>
-    <head>
-        <title>tomrudick.com</title>
-        <link rel="stylesheet" type="text/css" href="assets/css/layout.css">
-        <link rel="stylesheet" type="text/css" href="assets/css/rickshaw.min.css">
-        <script src="assets/js/jquery.js"></script>
-        <script src="assets/js/d3.min.js"></script>
-        <script src="assets/js/d3.layout.min.js"></script>
-        <script src="assets/js/rickshaw.js"></script>
+<head>
+    <title>tomrudick.com</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="assets/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/skeleton.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/layout.css">
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_ZmzJqed89XKQ76LGYQzYY06tvfUMK90"></script>
-        <script src="assets/js/music.js"></script>
-        <script src="assets/js/maps.js"></script>
-        <script src="assets/js/walking.js"></script>
-        <script src="assets/js/email.js"></script>
-    </head>
-    <body>
-        <div id="header">
-            <h1>tom rudick</h1>
-            <h2>software engineer at <a href="https://www.google.com">google</a></h2>
-            <h2>beekeeper, printer, bow tie enthusiast</h2>
-        </div>
 
-        <div class="section" id="bio">
-            <p>Hi! I'm Tom. I currently live in Cambridge, MA and work on voice search for watches running Android Wear.</p>
-        </div>
+            <script src="assets/js/maps.js"></script>
 
-        <div class="section" id="projects">
-            <p>Some people tell me that I am working on <a href="https://github.com/tmrudick">too many side projects</a> but I just think that they aren't working on enough of their own. I've been most recently working on {{{link projects.most_recent.name projects.most_recent.url}}}.</p>
-        </div>
+</head>
+<body class="container">
+    <div id="heading">
+        <h1>tom rudick</h1>
+        <h2>software engineer @ google</h2>
+        <h2>beekeeper, printer, bow tie enthusiast</h2>
+    </div>
+    
+    <div id="vitals">
+      <h3>vitals</h3>
+      <div id="today">
+        <h4>today</h4>
+        <ul class="stats row">
+          <li class="three columns">
+            <i class="material-icons">directions_walk</i>
+            <span class="value">{{ toMi fitness_daily.walking }}mi</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">directions_bike</i>
+            <span class="value">{{ toMi fitness_daily.biking }}mi</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">email</i>
+            <span class="value">{{ sent_emails.today }}</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">music_note</i>
+            <span class="value">{{ music_daily }}</span>
+          </li>
+        </ul>    
+      </div>
+      <div id="week">
+        <h4>this week</h4>
+        <ul class="stats row">
+          <li class="three columns">
+            <i class="material-icons">directions_walk</i>
+            <span class="value">{{ toMi fitness_weekly.walking }}mi</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">directions_bike</i>
+            <span class="value">{{ toMi fitness_weekly.biking }}mi</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">email</i>
+            <span class="value">{{ sent_emails.week }}</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">music_note</i>
+            <span class="value">{{ music_weekly }}</span>
+          </li>
+        </ul>    
+      </div>
+      <div id="year">
+        <h4>this year</h4>
+        <ul class="stats row">
+          <li class="three columns">
+            <i class="material-icons">directions_walk</i>
+            <span class="value">{{ toMi fitness_yearly.walking }}mi</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">directions_bike</i>
+            <span class="value">{{ toMi fitness_yearly.biking }}mi</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">email</i>
+            <span class="value">{{ sent_emails.year }}</span>
+          </li>
+          <li class="three columns">
+            <i class="material-icons">music_note</i>
+            <span class="value">{{ music_yearly }}</span>
+          </li>
+        </ul>    
+      </div>
+    </div>
 
-        <div class="section" id="music">
-            <p>Music is pretty great. Open office spaces and the subway encourage me to listen to more music than I used to.
-                {{#if music_daily.total}}
-                    I've listened to {{music_daily.total}} songs today.</p>
-                {{else}}
-                    Although, I haven't listened to anything yet today...
-                {{/if}}
-            <div id="music-chart"></div>
-            <div id="albums">
-                <ul class='horizontal-list'>
-                    {{#each album_covers}}
-                    <li class="song"><a href="{{this.url}}"><img src="{{this.image}}"></a></li>
-                    {{/each}}
-                </ul>
-            </div>
-        </div>
+    <div id="music">
+      <h3>music</h3>
+      <ul class="row">
+        {{#each album_covers}}
+            <li class="two columns">
+                <a href="{{this.href}}">
+                    <img class="u-max-full-width" src="{{this.image}}" />
+                </a>
+            </li>
+        {{/each}}
+      </ul>
+    </div>
 
-        <div class="section" id="locations">
-            <p>This week, I've checked into {{checkins.recent.length}} places. The plurality of them have been {{checkins.top_category}}.</p>
-            <div id="map"></div>
+    <!-- Maps -->
+    <div id="travel">
+      <h3>travels</h3>
+      <div class="row">
+        <div id="map" class="eight columns" style="background:black;height:300px">
         </div>
+        <ul id="checkins" class="four columns">
+          {{#each checkins.categories}}
+            <li>{{this.count}} {{this.name}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
 
-        <div class="section" id="email">
-            <p>Most of the time, I receive way more email than I send.</p>
-            <div id="emails-sent-chart"></div>
-            <div id="x-axis"></div>
-        </div>
+    <!-- 8:36pm -->
+    <div id="eight36">
+      <h3>8:36pm</h3>
+      <ul class="row">
+        {{#each eight30six.photos}}
+        <li class="two columns">
+          <a href="{{this.url}}"><img class="crop u-max-full-width" src="{{this.img}}" /></a>
+        </li>        
+        {{/each}}
+      </ul>
+    </div>
 
-        <div class="section" id="health">
-            <p>I usually try to walk as much as I can. Some days I'm better than others.
-                {{#if walking.today}}
-                Today, I've walked {{walking.today}} miles so far.
-                {{/if}}</p>
-            <div id="walking-chart"></div>
-            <div id="timeline"></div>
-        </div>
+    <div id="contact">
+      <h3>contact</h3>
+      <p>Feel free to reach out via <a href="mailto:tmrudick@gmail.com">email</a> or <a href="https://twitter.com/tmrudick">twitter</a>.</p>
+    </div>
 
-        <div class="section" id="eight30six">
-            <p>Inspired by <a href="http://busterbenson.com">Buster Benson</a>, I've been taking a photo of exactly what I'm doing every night at <a href="http://836.rudickulous.com">8:36pm</a>.</p>
-            <div class="highlight cropped {{eight30six.recent.css}}"><a href="{{eight30six.recent.url}}"><img src="{{eight30six.recent.img}}"><p>{{eight30six.recent.caption}}</p></a>
-            </div>
-            <div class="grid-box">
-                {{#each eight30six.previous}}
-                <div class="cropped {{this.css}}"><a href="{{this.url}}"><img src="{{this.img}}"><p>{{this.caption}}</p></a></div>
-                {{/each}}
-            </div>
-        </div>
-
-        <div class="section" id="contact">
-                <p>Feel free to contact me via <a href="mailto:tmrudick@gmail.com">email</a>, <a href="https://twitter.com/tmrudick">twitter</a>, <a href="http:s//facebook.com/tmrudick">facebook</a>, <a href="https://open.spotify.com/user/tmrudick">spotify</a>, or <a href="https://www.linkedin.com/in/tomrudick">linkedin</a>.</p>
-                <p class="tonic"><a href="https://api.tomrudick.com">api.tomrudick.com</a> | built with <a href="http://www.tonicjs.org">tonic</a></p>
-        </div>
-        <script>
-            $(function() {
-                Music.init('music-chart');
-                Maps.init('map');
-                Walking.init('walking-chart');
-                Email.init('emails-sent-chart');
-            });
-
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    <script>
+      Maps.init('map');
+            
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
             ga('create', 'UA-5618496-8', 'tomrudick.com');
             ga('send', 'pageview');
-        </script>
-    </body>
+    </script>
+</body>
 </html>
